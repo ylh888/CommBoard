@@ -1,0 +1,52 @@
+
+.invisible {
+    display: none;
+    visibility: hidden;
+}
+
+div.serif{font-family:"Times New Roman",Times,serif;}
+div.sansserif{font-family:Arial,Helvetica,sans-serif;}
+
+div#testButton {visibility:hidden; display: none;}
+//div#debug {visibility:hidden; display:none; }
+div.audioclass { visibility:hidden; display:none; }
+
+//div#SayIt {autoplay;visibility:hidden}
+div#container {width:810px;}
+/*div.content {background-color:#EEEEEE;height:800px;width:600px;float:left;}
+div.menu {background-color:#FFD700;height:800px;width:100px;float:left; } */
+
+div.rowOn  { float:left;
+    width: 700px;
+    height: 54px;
+    color: yellow;
+    background-color: yellowgreen;
+}
+div.rowOff { float:left;
+    width: 700px;
+    height: 54px;
+
+    background-color: ghostwhite;
+}
+
+input.btnOn {color:darkred; font: bold 150%'trebuchet ms',helvetica,sans-serif; float:left;
+    margin: 2px 2px 2px 2px;
+    background-color: yellow;
+    width: 110px; height:48px;
+}
+
+input.btnOff {color:darkblue; font: bold 150%'trebuchet ms',helvetica,sans-serif; float:left;
+    margin: 2px 2px 2px 2px;
+    background-color:ghostwhite;
+    width: 110px; height:48px;
+}
+
+input#pauseButton {color:red; font: bold 100%'trebuchet ms',helvetica,sans-serif;
+    background-color:ghostwhite;
+    width: 95px; height:30px;
+}
+input#selectButton {color:blue; font: bold 100%'trebuchet ms',helvetica,sans-serif;
+    background-color:ghostwhite;
+    width: 95px; height:30px;
+}
+div#clientTxt {color:darkblue; font: bold 150%'trebuchet ms',helvetica,sans-serif;}
