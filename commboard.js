@@ -53,11 +53,12 @@ var buttonText=
         {"t":"Z", kind:"Alpha"},
 
         {"t":"espace", kind:"Subs", substitute:" "},
+
         {"t":"effacer", kind:"Delete"},
-        {"t":"arreter", kind:"SayIt"},
         {"t":"succion", kind:"SayIt"},
         {"t":"position", kind:"SayIt"},
         {"t":"bassin", kind:"SayIt"},
+        {"t":"froid", kind:"SayIt"},
 
 
     ];
@@ -173,6 +174,7 @@ function buttonClicked(i) {
 function doButton(i) {
     debugMessage = "do " + i + " ";
 
+
     switch (buttonText[i].kind ) {
         case "Alpha":
             clientTxt += buttonText[i].t.toLowerCase();
@@ -274,7 +276,7 @@ function stateChanged()
         setButton(highlightButton,'On');
         document.getElementById("btn"+highlightButton).focus();
         state=1;
-        setTimeout(function() { selectPressed=0; }, 800);
+        setTimeout(function() { selectPressed=0; }, 2200);
     }
     else if(state==1) {
         setRow(selectedRow, "Off");
@@ -289,12 +291,8 @@ function stateChanged()
 
         doButton(highlightButton);
 
-        if(buttonText[highlightButton].t == 'arreter') {
-            pauseIt();
-        }
-
         state=0;
-        setTimeout(function() { selectPressed=0; }, 800);
+        setTimeout(function() { selectPressed=0; }, 1000);
 
     } else if(state==2){
         // state=0;
@@ -326,7 +324,7 @@ function altState() {
     //debugMessage +=" altS" + state + " sp?" + selectPressed;
 
     if( pauseState ){   // paused
-        setTimeout( function(){altState()}, 300);
+        setTimeout( function(){altState()}, 1000);
     } else {
         if( selectPressed==0 ) {  // no key activity - steady state
             if(state==0) {
@@ -352,7 +350,7 @@ function altState() {
         } else {  // under state pressed
         }
 
-        setTimeout( function(){altState()}, 800);
+        setTimeout( function(){altState()}, 2200);
     }
 
 }
