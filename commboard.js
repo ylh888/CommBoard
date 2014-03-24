@@ -6,8 +6,9 @@ var debugMessage = "",
     inc = 0,
     nRows= 6,
     nCols= 6,
-    nStates= 2,
+    nStates= 2,  // not used
     pauseState= 0,
+    soundOn=1;
     highlightRow=-1,
     selectedRow=-1,
     highlightButton=-1,
@@ -76,6 +77,7 @@ function startTime()
     t=setTimeout(function(){startTime();},500);
 }
 
+
 function playmp3(i) {
     document.getElementById("audio"+i).play();
     return;
@@ -89,6 +91,7 @@ function playmp3(i) {
         audioElement2.play();
     }());
 }
+
 
 function makeAudio(t){
 
@@ -142,6 +145,18 @@ function keyReceived() {
     //return (keyunicode>=65 && keyunicode<=122 || keyunicode==8 || keyunicode==32)? true : false
 }
 
+function sound() {
+    soundOn = 1-soundOn;
+    if(soundOn) {
+        document.getElementById('soundButton').value="SOUND OFF";
+        document.getElementById('soundButton').style="color:red;";
+    }
+    else {
+        document.getElementById('soundButton').value="SOUND ON";
+        document.getElementById('soundButton').style="color:blue;";
+    }
+}
+
 function pauseIt() {
     pauseState =1-pauseState;
     if(pauseState) {
@@ -174,7 +189,7 @@ function buttonClicked(i) {
 }
 
 function doButton(i) {
-    debugMessage = "do " + i + " ";
+    //debugMessage = "do " + i + " ";
 
     switch (buttonText[i].kind ) {
         case "Alpha":
@@ -296,7 +311,7 @@ function checkState() {
                 //alert("state 0 and no press")
                 setRow(highlightRow, "Off");
                 highlightRow=(++highlightRow)%nRows;
-                //playmp3( highlightRow*nCols);
+                if(soundOn) playmp3( highlightRow*nCols);
                 setRow(highlightRow, "On");
                 document.getElementById("btn"+(highlightRow*nCols)).focus();
                 //setTimeout( function(){checkState()}, 1000);
@@ -304,7 +319,7 @@ function checkState() {
             else if(state==1) {
                 setButton(highlightButton,'Off');
                 highlightButton=(++highlightButton)%nCols + selectedRow*nCols;
-                //playmp3(highlightButton);
+                if(soundOn) playmp3(highlightButton);
                 document.getElementById("btn"+highlightButton).focus();
                 setButton(highlightButton,'On');
                // setTimeout( function(){checkState()}, 1000);

@@ -49,4 +49,8 @@ input#selectButton {color:blue; font: bold 100%'trebuchet ms',helvetica,sans-ser
     background-color:ghostwhite;
     width: 95px; height:30px;
 }
+input#soundButton {color:blue; font: bold 100%'trebuchet ms',helvetica,sans-serif;
+    background-color:ghostwhite;
+    width: 95px; height:30px;
+}
 div#clientTxt {color:darkblue; font: bold 150%'trebuchet ms',helvetica,sans-serif;}
