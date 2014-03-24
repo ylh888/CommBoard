@@ -16,51 +16,48 @@ var debugMessage = "",
 // state:: 0=cycle row, 1=cycle column, 2= action on button (row,col)
 
 var buttonText=
-    [   {"t":"A", kind:"Alpha"},
-        {"t":"B", kind:"Alpha"},
-        {"t":"C", kind:"Alpha"},
-        {"t":"D", kind:"Alpha"},
+    [   {"t":"a", kind:"Alpha"},
+        {"t":"b", kind:"Alpha"},
+        {"t":"c", kind:"Alpha"},
+        {"t":"d", kind:"Alpha"},
         {"t":"Oui", kind:"SayIt"},
         {"t":"Non", kind:"SayIt"},
 
-        {"t":"E", kind:"Alpha"},
-        {"t":"F", kind:"Alpha"},
-        {"t":"G", kind:"Alpha"},
-        {"t":"H", kind:"Alpha"},
+        {"t":"e", kind:"Alpha"},
+        {"t":"f", kind:"Alpha"},
+        {"t":"g", kind:"Alpha"},
+        {"t":"h", kind:"Alpha"},
         {"t":"Parler", kind:"SayAll"},
         {"t":"Rayer", kind:"Erase"},
 
 
-        {"t":"I", kind:"Alpha"},
-        {"t":"J", kind:"Alpha"},
-        {"t":"K", kind:"Alpha"},
-        {"t":"L", kind:"Alpha"},
-        {"t":"M", kind:"Alpha"},
-        {"t":"N", kind:"Alpha"},
+        {"t":"i", kind:"Alpha"},
+        {"t":"j", kind:"Alpha"},
+        {"t":"k", kind:"Alpha"},
+        {"t":"l", kind:"Alpha"},
+        {"t":"m", kind:"Alpha"},
+        {"t":"n", kind:"Alpha"},
 
-        {"t":"O", kind:"Alpha"},
-        {"t":"P", kind:"Alpha"},
-        {"t":"Q", kind:"Alpha"},
-        {"t":"R", kind:"Alpha"},
-        {"t":"S", kind:"Alpha"},
-        {"t":"T", kind:"Alpha"},
+        {"t":"o", kind:"Alpha"},
+        {"t":"p", kind:"Alpha"},
+        {"t":"q", kind:"Alpha"},
+        {"t":"r", kind:"Alpha"},
+        {"t":"s", kind:"Alpha"},
+        {"t":"t", kind:"Alpha"},
 
-        {"t":"U", kind:"Alpha"},
-        {"t":"V", kind:"Alpha"},
-        {"t":"W", kind:"Alpha"},
-        {"t":"X", kind:"Alpha"},
-        {"t":"Y", kind:"Alpha"},
-        {"t":"Z", kind:"Alpha"},
+        {"t":"u", kind:"Alpha"},
+        {"t":"v", kind:"Alpha"},
+        {"t":"w", kind:"Alpha"},
+        {"t":"x", kind:"Alpha"},
+        {"t":"y", kind:"Alpha"},
+        {"t":"z", kind:"Alpha"},
 
         {"t":"espace", kind:"Subs", substitute:" "},
-
         {"t":"effacer", kind:"Delete"},
+        {"t":"arreter", kind:"SayIt"},
         {"t":"succion", kind:"SayIt"},
         {"t":"position", kind:"SayIt"},
         {"t":"bassin", kind:"SayIt"},
-        {"t":"froid", kind:"SayIt"},
-
-
     ];
 
 
@@ -165,7 +162,12 @@ function selected() {
     stateChanged();
 }
 function buttonClicked(i) {
-   if (pauseState) return;
+   if (pauseState) {
+       if( buttonText[highlightButton].kind == "SayIt" ) {
+           pauseIt();
+       }
+    return;
+   }
    selectPressed=1;
    stateChanged();
 
@@ -173,7 +175,6 @@ function buttonClicked(i) {
 
 function doButton(i) {
     debugMessage = "do " + i + " ";
-
 
     switch (buttonText[i].kind ) {
         case "Alpha":
@@ -223,41 +224,6 @@ function testMe() {
     debugMessage = "clicked " + (inc);
 }
 
-/*function setRowTabbing(){
-     return;
-    for (var i=0; i<nRows; i++) {
-        document.getElementById("row" + i).setAttribute("tabindex",i+1);
-    }
-    //debugMessage += "row tabbing";
-}
-
-function UnsetRowTabbing(){
-    return;
-    for(var i=0; i<nRows; i++){
-        document.getElementById("row" + i).setAttribute("tabindex","");
-    }
-    //debugMessage += "unset row tabbing"
-}
-
-function setButtonTabbing(row){
-    return;
-    for(var i=0; i<nCols; i++) {
-        document.getElementById("btn" + (i + row*nCols)).setAttribute("tabindex",i+1);
-    }
-    //debugMessage += "button tabbing";
-}
-
- function UnsetButtonTabbing(row) {
- return;
- //if (document.getElementById("btn" + row*nCols).tabindex==1) {
- for(var i=0; i<nCols; i++) {
- document.getElementById("btn" + (i + row*nCols)).setAttribute("tabindex","");
- }
- //debugMessage += "unset button tabbing";
- //}
- }
-*/
-
 function stateChanged()
 {
     // select pressed  - state transition
@@ -265,9 +231,6 @@ function stateChanged()
     if(state==0) {
         selectedRow = highlightRow;
         setRowButtons(selectedRow, "Off");
-
-        //UnsetRowTabbing();
-        //setButtonTabbing(selectedRow);
 
         highlightButton=selectedRow*nCols;
 
@@ -282,8 +245,6 @@ function stateChanged()
         setRow(selectedRow, "Off");
 
         setButton(highlightButton,'Off');
-        //UnsetButtonTabbing(selectedRow);
-        //setRowTabbing();
 
         if(buttonText[highlightButton].kind != "SayAll") {
             playmp3(highlightButton);
@@ -291,8 +252,12 @@ function stateChanged()
 
         doButton(highlightButton);
 
+        if(buttonText[highlightButton].kind == 'SayIt') {
+            pauseIt();
+        }
+
         state=0;
-        setTimeout(function() { selectPressed=0; }, 1000);
+        setTimeout(function() { selectPressed=0; }, 2200);
 
     } else if(state==2){
         // state=0;
@@ -320,37 +285,36 @@ function setButton(r,OnOff)  {
     document.getElementById("btn" + r).setAttribute("class","btn"+OnOff);
 }
 
-function altState() {
+function checkState() {
     //debugMessage +=" altS" + state + " sp?" + selectPressed;
 
     if( pauseState ){   // paused
-        setTimeout( function(){altState()}, 1000);
+        setTimeout( function(){checkState()}, 300);
     } else {
         if( selectPressed==0 ) {  // no key activity - steady state
             if(state==0) {
                 //alert("state 0 and no press")
                 setRow(highlightRow, "Off");
                 highlightRow=(++highlightRow)%nRows;
-                playmp3( highlightRow*nCols);
+                //playmp3( highlightRow*nCols);
                 setRow(highlightRow, "On");
-                //document.getElementById("row"+highlightRow).focus();
                 document.getElementById("btn"+(highlightRow*nCols)).focus();
-                //setTimeout( function(){altState()}, 1000);
+                //setTimeout( function(){checkState()}, 1000);
             }
             else if(state==1) {
                 setButton(highlightButton,'Off');
                 highlightButton=(++highlightButton)%nCols + selectedRow*nCols;
-                playmp3(highlightButton);
+                //playmp3(highlightButton);
                 document.getElementById("btn"+highlightButton).focus();
                 setButton(highlightButton,'On');
-               // setTimeout( function(){altState()}, 1000);
+               // setTimeout( function(){checkState()}, 1000);
             } else if(state==2){
-                //setTimeout( function(){altState()}, 200);
+                //setTimeout( function(){checkState()}, 200);
             }
         } else {  // under state pressed
         }
 
-        setTimeout( function(){altState()}, 2200);
+        setTimeout( function(){checkState()}, 2200);
     }
 
 }
@@ -390,7 +354,7 @@ function getStarted() {
 
     doVideoSetUp();
 
-    altState(); // kick it off!!
+    checkState(); // kick it off!!
     document.getElementById("pauseButton").focus();
     document.getElementById("pauseButton").select();
 }
@@ -407,8 +371,10 @@ function myDelay (del) {
 function tmpplaymp3(i) {
       playmp3(i);
       // simulatedClick(document.getElementById("tmpB"+i),"click");
-      if( i<nCols*nRows) document.getElementById("tmpB"+(i+1)).focus();
-
+      if( i<nCols*nRows-1)
+          document.getElementById("tmpB"+(i+1)).focus();
+      else
+          document.getElementById("pauseButton").focus();
 }
 
 function doVideoSetUp(){
@@ -420,6 +386,7 @@ function doVideoSetUp(){
             " ></input>";
     }
     document.getElementById("videoSetUp").innerHTML=t;
+
 /*
     for (var i=0; i<nRows*nCols; i++) {
         (function () {
