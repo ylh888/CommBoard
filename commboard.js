@@ -378,6 +378,8 @@ function tmpplaymp3(i) {
 }
 
 function doVideoSetUp(){
+    return; //******
+
     var t="";
     for (var j=0; j<nRows*nCols; j++) {
         t+="<input type='button' id='tmpB" +j+ "' onclick='tmpplaymp3(" + j +
