@@ -2,89 +2,174 @@
  * Created by ylh on 14-03-13.
  */
 var debugMessage = "",
-    clientTxt="",
+    clientTxt = "",
     inc = 0,
-    nRows= 6,
-    nCols= 6,
-    nStates= 2,  // not used
-    pauseState= 0,
-    soundOn=1;
-    highlightRow=-1,
-    selectedRow=-1,
-    highlightButton=-1,
-    state= 0,
-    selectPressed=0;
+    nRows = 6,
+    nCols = 6,
+    nStates = 2, // not used
+    pauseState = 0,
+    soundOn = 0,
+    highlightRow = -1,
+    selectedRow = -1,
+    highlightButton = -1,
+    state = 0,
+    buttonPresented = 0,
+    debouncetime = 100,
+    selectPressed = 0;
 // state:: 0=cycle row, 1=cycle column, 2= action on button (row,col)
 
-var buttonText=
-    [   {"t":"a", kind:"Alpha"},
-        {"t":"b", kind:"Alpha"},
-        {"t":"c", kind:"Alpha"},
-        {"t":"d", kind:"Alpha"},
-        {"t":"Oui", kind:"SayIt"},
-        {"t":"Non", kind:"SayIt"},
+var buttonText = [{
+        "t": "a",
+        kind: "Alpha"
+    }, {
+        "t": "b",
+        kind: "Alpha"
+    }, {
+        "t": "c",
+        kind: "Alpha"
+    }, {
+        "t": "d",
+        kind: "Alpha"
+    }, {
+        "t": "Oui",
+        kind: "SayIt"
+    }, {
+        "t": "Non",
+        kind: "SayIt"
+    },
+    
+    // row 1
+        {
+        "t": "e",
+        kind: "Alpha"
+    }, {
+        "t": "f",
+        kind: "Alpha"
+    }, {
+        "t": "g",
+        kind: "Alpha"
+    }, {
+        "t": "h",
+        kind: "Alpha"
+    }, {
+        "t": "Parler",
+        kind: "SayAll"
+    }, {
+        "t": "Rayer",
+        kind: "Erase"
+    },
 
-        {"t":"e", kind:"Alpha"},
-        {"t":"f", kind:"Alpha"},
-        {"t":"g", kind:"Alpha"},
-        {"t":"h", kind:"Alpha"},
-        {"t":"Parler", kind:"SayAll"},
-        {"t":"Rayer", kind:"Erase"},
+    // row 2
+        {
+        "t": "i",
+        kind: "Alpha"
+    }, {
+        "t": "j",
+        kind: "Alpha"
+    }, {
+        "t": "k",
+        kind: "Alpha"
+    }, {
+        "t": "l",
+        kind: "Alpha"
+    }, {
+        "t": "m",
+        kind: "Alpha"
+    }, {
+        "t": "n",
+        kind: "Alpha"
+    },
+
+    // row 3
+        {
+        "t": "o",
+        kind: "Alpha"
+    }, {
+        "t": "p",
+        kind: "Alpha"
+    }, {
+        "t": "q",
+        kind: "Alpha"
+    }, {
+        "t": "r",
+        kind: "Alpha"
+    }, {
+        "t": "s",
+        kind: "Alpha"
+    }, {
+        "t": "t",
+        kind: "Alpha"
+    },
+
+     // row 4
+        {
+        "t": "u",
+        kind: "Alpha"
+    }, {
+        "t": "v",
+        kind: "Alpha"
+    }, {
+        "t": "w",
+        kind: "Alpha"
+    }, {
+        "t": "x",
+        kind: "Alpha"
+    }, {
+        "t": "y",
+        kind: "Alpha"
+    }, {
+        "t": "z",
+        kind: "Alpha"
+    },
+
+     // row 5
+        {
+        "t": "espace",
+        kind: "Subs",
+        substitute: " "
+    }, {
+        "t": "effacer",
+        kind: "Delete"
+    }, {
+        "t": "arreter",
+        kind: "SayIt"
+    }, {
+        "t": "succion",
+        kind: "SayIt"
+    }, {
+        "t": "position",
+        kind: "SayIt"
+    }, {
+        "t": "bassin",
+        kind: "SayIt"
+    },
+];
 
 
-        {"t":"i", kind:"Alpha"},
-        {"t":"j", kind:"Alpha"},
-        {"t":"k", kind:"Alpha"},
-        {"t":"l", kind:"Alpha"},
-        {"t":"m", kind:"Alpha"},
-        {"t":"n", kind:"Alpha"},
-
-        {"t":"o", kind:"Alpha"},
-        {"t":"p", kind:"Alpha"},
-        {"t":"q", kind:"Alpha"},
-        {"t":"r", kind:"Alpha"},
-        {"t":"s", kind:"Alpha"},
-        {"t":"t", kind:"Alpha"},
-
-        {"t":"u", kind:"Alpha"},
-        {"t":"v", kind:"Alpha"},
-        {"t":"w", kind:"Alpha"},
-        {"t":"x", kind:"Alpha"},
-        {"t":"y", kind:"Alpha"},
-        {"t":"z", kind:"Alpha"},
-
-        {"t":"espace", kind:"Subs", substitute:" "},
-        {"t":"effacer", kind:"Delete"},
-        {"t":"arreter", kind:"SayIt"},
-        {"t":"succion", kind:"SayIt"},
-        {"t":"position", kind:"SayIt"},
-        {"t":"bassin", kind:"SayIt"},
-    ];
-
-
-function startTime()
-{
-    var today=new Date();
-    var h=today.getHours();
-    var m=today.getMinutes();
-    var s=today.getSeconds();
+function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
     // add a zero in front of numbers<10
-    m=m<10? "0"+m : m;
-    s=s<10? "0"+s : s;
-    document.getElementById('clientTxt').innerHTML="["+h+":"+m+":"+s+ "] "+ clientTxt;
-    document.getElementById('debug').innerHTML=debugMessage;
+    m = m < 10 ? "0" + m : m;
+    s = s < 10 ? "0" + s : s;
+    document.getElementById('clientTxt').innerHTML = "[" + h + ":" + m + ":" + s + "] " + clientTxt;
+    document.getElementById('debug').innerHTML = debugMessage;
 
-    t=setTimeout(function(){startTime();},500);
+    t = setTimeout(function () {
+        startTime();
+    }, 500);
 }
 
 
 function playmp3(i) {
-    document.getElementById("audio"+i).play();
+    document.getElementById("audio" + i).play();
     return;
 
     (function () {
         audioElement2 = document.createElement('audio');
-        audioElement2.setAttribute('src', 'img/fr_' + buttonText[i].t.replace(/ /g,"+") + '.mp3' );
+        audioElement2.setAttribute('src', 'img/fr_' + buttonText[i].t.replace(/ /g, "+") + '.mp3');
         audioElement2.controls = true;
         audioElement2.loop = false;
         audioElement2.load();
@@ -93,12 +178,12 @@ function playmp3(i) {
 }
 
 
-function makeAudio(t){
+function makeAudio(t) {
 
     (function () {
         audioElement2 = document.createElement('audio');
         audioElement2.setAttribute('src', 'http://translate.google.com/translate_tts?tl=fr&q=' +
-            t );
+            t);
         audioElement2.controls = true;
         audioElement2.loop = false;
         audioElement2.load();
@@ -115,57 +200,54 @@ function makeAudio(t){
 function keyReceived() {
 
     var x;
-    if(window.event) // IE8 and earlier
+    if (window.event) // IE8 and earlier
     {
-        x=event.keyCode;
-    }
-    else if(event.which) // IE9/Firefox/Chrome/Opera/Safari
+        x = event.keyCode;
+    } else if (event.which) // IE9/Firefox/Chrome/Opera/Safari
     {
-        x=event.which;
+        x = event.which;
     }
-    var keychar=String.fromCharCode(x);
+    var keychar = String.fromCharCode(x);
 
     //alert("Key " + keychar + " was pressed down");
 
     //var keychar = e.keyChar;
 
     switch (keychar) {
-        case 's':
-        case 'S':
-            debugMessage+=" 's' ";
-            selected();
-            break;
-        case 'p':
-        case 'P':
-            debugMessage+=" 'p'";
-            pauseIt();
-            break;
+    case 's':
+    case 'S':
+        debugMessage += " 's' ";
+        selected();
+        break;
+    case 'p':
+    case 'P':
+        debugMessage += " 'p'";
+        pauseIt();
+        break;
     }
     //Allow alphabetical keys, plus BACKSPACE and SPACE
     //return (keyunicode>=65 && keyunicode<=122 || keyunicode==8 || keyunicode==32)? true : false
 }
 
 function sound() {
-    soundOn = 1-soundOn;
-    if(soundOn) {
-        document.getElementById('soundButton').value="SOUND OFF";
-        document.getElementById('soundButton').style="color:red;";
-    }
-    else {
-        document.getElementById('soundButton').value="SOUND ON";
-        document.getElementById('soundButton').style="color:blue;";
+    soundOn = 1 - soundOn;
+    if (soundOn) {
+        document.getElementById('soundButton').value = "SOUND OFF";
+        document.getElementById('soundButton').style = "color:red;";
+    } else {
+        document.getElementById('soundButton').value = "SOUND ON";
+        document.getElementById('soundButton').style = "color:blue;";
     }
 }
 
 function pauseIt() {
-    pauseState =1-pauseState;
-    if(pauseState) {
-        document.getElementById('pauseButton').value="RUN";
+    pauseState = 1 - pauseState;
+    if (pauseState) {
+        document.getElementById('pauseButton').value = "RUN";
         doVideoSetUp();
         //debugMessage = "Paused.";
-    }
-    else {
-        document.getElementById('pauseButton').value="PAUSE";
+    } else {
+        document.getElementById('pauseButton').value = "PAUSE";
         endVideoSetUp();
         //debugMessage = "Running ...";
     }
@@ -173,177 +255,209 @@ function pauseIt() {
 
 function selected() {
     if (pauseState) return;
-    selectPressed=1;
+    selectPressed = 1;
     stateChanged();
 }
+
 function buttonClicked(i) {
-   if (pauseState) {
-       if( buttonText[highlightButton].kind == "SayIt" ) {
-           pauseIt();
-       }
-    return;
-   }
-   selectPressed=1;
-   stateChanged();
+    if (pauseState) {
+        if (buttonText[highlightButton].kind == "SayIt") {
+            pauseIt();
+        }
+        return;
+    }
+    selectPressed = 1;
+    stateChanged();
 
 }
 
 function doButton(i) {
     //debugMessage = "do " + i + " ";
 
-    switch (buttonText[i].kind ) {
-        case "Alpha":
-            clientTxt += buttonText[i].t.toLowerCase();
-            playmp3(i);
+    switch (buttonText[i].kind) {
+    case "Alpha":
+        clientTxt += buttonText[i].t.toLowerCase();
+        playmp3(i);
         break;
 
-        case 'SayIt':
-            //clientTxt += buttonText[i].t;   //for now
-            playmp3(i);
+    case 'SayIt':
+        //clientTxt += buttonText[i].t;   //for now
+        playmp3(i);
         break;
 
-        case 'SayAll':
-            makeAudio( clientTxt.replace(/ /g,"+") );
+    case 'SayAll':
+        makeAudio(clientTxt.replace(/ /g, "+"));
         break;
 
-        case 'Subs':
-          clientTxt += buttonText[i].substitute;
-          playmp3(i);
+    case 'Subs':
+        clientTxt += buttonText[i].substitute;
+        playmp3(i);
         break;
 
-        case 'Erase':
-            playmp3(i);
-            clientTxt = "";
+    case 'Erase':
+        playmp3(i);
+        clientTxt = "";
         break;
 
-        case 'Delete':
-            playmp3(i);
-            clientTxt = clientTxt.substring(0,clientTxt.length>0? clientTxt.length-1 : 0);
-         break;
+    case 'Delete':
+        playmp3(i);
+        clientTxt = clientTxt.substring(0, clientTxt.length > 0 ? clientTxt.length - 1 : 0);
+        break;
     }
 }
 
 function testMe() {
-    inc=1-inc;
+    inc = 1 - inc;
 
-    if( inc ) {
-        document.getElementById("row0").setAttribute("class","rowOn");
-        document.getElementById("row4").setAttribute("class","rowOff");
-    }
-    else {
-        document.getElementById("row0").setAttribute("class","rowOff");
-        document.getElementById("row4").setAttribute("class","rowOn");
+    if (inc) {
+        document.getElementById("row0").setAttribute("class", "rowOn");
+        document.getElementById("row4").setAttribute("class", "rowOff");
+    } else {
+        document.getElementById("row0").setAttribute("class", "rowOff");
+        document.getElementById("row4").setAttribute("class", "rowOn");
 
     }
 
     debugMessage = "clicked " + (inc);
 }
 
-function stateChanged()
-{
+function stateChanged() {
     // select pressed  - state transition
 
-    if(state==0) {
+    if (state == 0) {
+        var now = new Date();
+        if ((now - buttonPresented) < debouncetime) {
+            // unwind to last button
+            setRow(highlightRow, 'Off');
+            --highlightRow;
+            if (highlightRow < 0) highlightRow = nRows - 1;
+        }
+
         selectedRow = highlightRow;
         setRowButtons(selectedRow, "Off");
 
-        highlightButton=selectedRow*nCols;
+        highlightButton = selectedRow * nCols;
 
         playmp3(highlightButton);
 
-        setButton(highlightButton,'On');
-        document.getElementById("btn"+highlightButton).focus();
-        state=1;
-        setTimeout(function() { selectPressed=0; }, 2200);
-    }
-    else if(state==1) {
+        setButton(highlightButton, 'On');
+        document.getElementById("btn" + highlightButton).focus();
+        state = 1;
+        setTimeout(function () {
+            selectPressed = 0;
+        }, 1600);
+    } else if (state == 1) {
+
+        var now = new Date();
+        if ((now - buttonPresented) < debouncetime) {
+            // unwind to last button
+            setButton(highlightButton, "Off");
+            --highlightButton;
+            if (highlightButton < 0) highlightButton = nCols - 1;
+        }
         setRow(selectedRow, "Off");
 
-        setButton(highlightButton,'Off');
+        setButton(highlightButton, 'Off');
 
-        if(buttonText[highlightButton].kind != "SayAll") {
+        if (buttonText[highlightButton].kind != "SayAll") {
             playmp3(highlightButton);
         }
 
         doButton(highlightButton);
 
-        if(buttonText[highlightButton].kind == 'SayIt') {
+        if (buttonText[highlightButton].kind == 'SayIt') {
             pauseIt();
         }
 
-        state=0;
-        setTimeout(function() { selectPressed=0; }, 2200);
+        state = 0;
+        setTimeout(function () {
+            selectPressed = 0;
+        }, 2000);
 
-    } else if(state==2){
+    } else {
         // state=0;
+        setTimeout(function () {
+            selectPressed = 0;
+        }, 2000);
     }
 
     //setTimeout(function() { selectPressed=0; }, 2500);
 }
 
-function setRow(r,OnOff)  {
-    document.getElementById("row" + r).setAttribute("class","row"+OnOff);
-    if(OnOff=="On") {
-        document.getElementById("btn" + r*nCols).focus();
+function setRow(r, OnOff) {
+    document.getElementById("row" + r).setAttribute("class", "row" + OnOff);
+    if (OnOff == "On") {
+        document.getElementById("btn" + r * nCols).focus();
     }
 }
 
-function setRowButtons(r,OnOff) {
+function setRowButtons(r, OnOff) {
     return;
-    for( var i=r*nCols; i<(r+1)*nCols; i++) {
-        setButton(i,OnOff);
+    for (var i = r * nCols; i < (r + 1) * nCols; i++) {
+        setButton(i, OnOff);
     }
 }
 
-function setButton(r,OnOff)  {
+function setButton(r, OnOff) {
     document.getElementById("btn" + r).focus();
-    document.getElementById("btn" + r).setAttribute("class","btn"+OnOff);
+    document.getElementById("btn" + r).setAttribute("class", "btn" + OnOff);
+    buttonPresented = new Date();
 }
 
 function checkState() {
-    //debugMessage +=" altS" + state + " sp?" + selectPressed;
+    //debugMessage +=" st=" + state + " sp?" + selectPressed;
 
-    if( pauseState ){   // paused
-        setTimeout( function(){checkState()}, 300);
+    if (pauseState) { // paused
+        setTimeout(function () {
+            checkState()
+        }, 300);
     } else {
-        if( selectPressed==0 ) {  // no key activity - steady state
-            if(state==0) {
+        if (selectPressed == 0) { // no key activity - steady state
+            if (state == 0) {
                 //alert("state 0 and no press")
                 setRow(highlightRow, "Off");
-                highlightRow=(++highlightRow)%nRows;
-                if(soundOn) playmp3( highlightRow*nCols);
+                highlightRow = (++highlightRow) % nRows;
+                if (soundOn) playmp3(highlightRow * nCols);
                 setRow(highlightRow, "On");
-                document.getElementById("btn"+(highlightRow*nCols)).focus();
-                //setTimeout( function(){checkState()}, 1000);
+                document.getElementById("btn" + (highlightRow * nCols)).focus();
+                setTimeout(function () {
+                    checkState()
+                }, 1600);
+            } else if (state == 1) {
+                setButton(highlightButton, 'Off');
+                highlightButton = (++highlightButton) % nCols + selectedRow * nCols;
+                if (soundOn) playmp3(highlightButton);
+                document.getElementById("btn" + highlightButton).focus();
+                setButton(highlightButton, 'On');
+                setTimeout(function () {
+                    checkState()
+                }, 2100);
+            } else if (state == 2) {
+                setTimeout(function () {
+                    checkState()
+                }, 200);
             }
-            else if(state==1) {
-                setButton(highlightButton,'Off');
-                highlightButton=(++highlightButton)%nCols + selectedRow*nCols;
-                if(soundOn) playmp3(highlightButton);
-                document.getElementById("btn"+highlightButton).focus();
-                setButton(highlightButton,'On');
-               // setTimeout( function(){checkState()}, 1000);
-            } else if(state==2){
-                //setTimeout( function(){checkState()}, 200);
-            }
-        } else {  // under state pressed
+        } else { // under state pressed
+            setTimeout(function () {
+                checkState()
+            }, 2000);
         }
 
-        setTimeout( function(){checkState()}, 2200);
+        //setTimeout( function(){checkState()}, 2000);
     }
 
 }
 
-function altSetTable() {
+function setTable() {
 
-    var t="<div id='menuTable'>";
+    var t = "<div id='menuTable'>";
 
-    for (var i=0; i<nRows; i++) {
-        t+="<div class='rowOff' id='row" + i + "'>";
+    for (var i = 0; i < nRows; i++) {
+        t += "<div class='rowOff' id='row" + i + "'>";
 
-        for (var j=i*nCols; j<(i+1)*nCols; j++) {
+        for (var j = i * nCols; j < (i + 1) * nCols; j++) {
 
-            t+="<div> <input type='button' class='btnOff' " +
+            t += "<div> <input type='button' class='btnOff' " +
                 "onclick ='buttonClicked(" + j + ");' id='btn" + j +
                 "' value=" + buttonText[j].t +
                 "></input></div> " +
@@ -351,9 +465,9 @@ function altSetTable() {
                 "' preload='auto' src='img/fr_" + buttonText[j].t.toLowerCase() +
                 ".mp3'></audio> </div>";
         }
-        t+="</div>";
+        t += "</div>";
     }
-    t+= "</div>";
+    t += "</div>";
 
     //t+="<script>document.getElementById('btn" + highlightButton + "').focus();</script>";
 
@@ -362,10 +476,11 @@ function altSetTable() {
 
 function getStarted() {
 
-    altSetTable();
+    setTable();
     doTabIndexOnce();
 
-    highlightRow=nRows-1; pauseState=1;
+    highlightRow = nRows - 1;
+    pauseState = 1;
 
     doVideoSetUp();
 
@@ -374,37 +489,38 @@ function getStarted() {
     document.getElementById("pauseButton").select();
 }
 
-function myDelay (del) {
+function myDelay(del) {
     return;
 
     var untilwhen = Date.now() + del;
-    while(untilwhen>Date.now())
-    {  }
+    while (untilwhen > Date.now()) {}
 }
 
 
 function tmpplaymp3(i) {
-      playmp3(i);
-      // simulatedClick(document.getElementById("tmpB"+i),"click");
-      if( i<nCols*nRows-1)
-          document.getElementById("tmpB"+(i+1)).focus();
-      else
-          document.getElementById("pauseButton").focus();
+    playmp3(i);
+    // simulatedClick(document.getElementById("tmpB"+i),"click");
+    if (i < nCols * nRows - 1) {
+        document.getElementById("tmpB" + (i + 1)).focus();
+    }
+    else {
+        document.getElementById("pauseButton").focus();
+    }
 }
 
-function doVideoSetUp(){
+function doVideoSetUp() {
     return; //******
 
-    var t="";
-    for (var j=0; j<nRows*nCols; j++) {
-        t+="<input type='button' id='tmpB" +j+ "' onclick='tmpplaymp3(" + j +
+    var t = "";
+    for (var j = 0; j < nRows * nCols; j++) {
+        t += "<input type='button' id='tmpB" + j + "' onclick='tmpplaymp3(" + j +
             ");' " +
             " value=" + buttonText[j].t +
             " ></input>";
     }
-    document.getElementById("videoSetUp").innerHTML=t;
+    document.getElementById("videoSetUp").innerHTML = t;
 
-/*
+    /*
     for (var i=0; i<nRows*nCols; i++) {
         (function () {
             audioElement2 = document.createElement('audio');
@@ -418,18 +534,19 @@ function doVideoSetUp(){
     }
     */
 }
-function endVideoSetUp(){
-    document.getElementById("videoSetUp").innerHTML="";
+
+function endVideoSetUp() {
+    document.getElementById("videoSetUp").innerHTML = "";
 }
 
 function doTabIndexOnce() {
 
     // to implement - set tabindex=-1 in the rest of the nodes
 
-    for (var j=0; j<nRows*nCols; j++) {
-        document.getElementById("btn"+j).setAttribute("tabindex", j+1);
+    for (var j = 0; j < nRows * nCols; j++) {
+        document.getElementById("btn" + j).setAttribute("tabindex", j + 1);
         //setTimeout(function() { playmp3(j) }(), j*800+10);
-       //simulatedClick(document.getElementById("audio"+j),"click");
+        //simulatedClick(document.getElementById("audio"+j),"click");
     }
 }
 
@@ -442,21 +559,21 @@ function simulatedClick(target, options) {
 
     //Set your default options to the right of ||
     var opts = {
-        type: options.type                  || 'click',
-        canBubble:options.canBubble             || true,
-        cancelable:options.cancelable           || true,
-        view:options.view                       || target.ownerDocument.defaultView,
-        detail:options.detail                   || 1,
-        screenX:options.screenX                 || 0, //The coordinates within the entire page
-        screenY:options.screenY                 || 0,
-        clientX:options.clientX                 || 0, //The coordinates within the viewport
-        clientY:options.clientY                 || 0,
-        ctrlKey:options.ctrlKey                 || false,
-        altKey:options.altKey                   || false,
-        shiftKey:options.shiftKey               || false,
-        metaKey:options.metaKey                 || false, //I *think* 'meta' is 'Cmd/Apple' on Mac, and 'Windows key' on Win. Not sure, though!
-        button:options.button                   || 0, //0 = left, 1 = middle, 2 = right
-        relatedTarget:options.relatedTarget     || null,
+        type: options.type || 'click',
+        canBubble: options.canBubble || true,
+        cancelable: options.cancelable || true,
+        view: options.view || target.ownerDocument.defaultView,
+        detail: options.detail || 1,
+        screenX: options.screenX || 0, //The coordinates within the entire page
+        screenY: options.screenY || 0,
+        clientX: options.clientX || 0, //The coordinates within the viewport
+        clientY: options.clientY || 0,
+        ctrlKey: options.ctrlKey || false,
+        altKey: options.altKey || false,
+        shiftKey: options.shiftKey || false,
+        metaKey: options.metaKey || false, //I *think* 'meta' is 'Cmd/Apple' on Mac, and 'Windows key' on Win. Not sure, though!
+        button: options.button || 0, //0 = left, 1 = middle, 2 = right
+        relatedTarget: options.relatedTarget || null,
     }
 
     //Pass in the options
