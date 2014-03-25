@@ -1,7 +1,7 @@
 /**
  * Created by ylh on 14-03-13.
  */
-var debugMessage = "",
+var debugMessage = "(space)=click | s=select | p=pause on/off | v=voice over simulation on/off",
     clientTxt = "",
     inc = 0,
     nRows = 6,
@@ -216,20 +216,25 @@ function keyReceived() {
     switch (keychar) {
     case 's':
     case 'S':
-        debugMessage += " 's' ";
+        //debugMessage += " 's' ";
         selected();
         break;
     case 'p':
     case 'P':
-        debugMessage += " 'p'";
-        pauseIt();
+        //debugMessage += " 'p'";
+        pauseOnOff();
+        break;
+    case 'v':
+    case 'V':
+        //debugMessage += " 'v'";
+        soundOnOff();
         break;
     }
     //Allow alphabetical keys, plus BACKSPACE and SPACE
     //return (keyunicode>=65 && keyunicode<=122 || keyunicode==8 || keyunicode==32)? true : false
 }
 
-function sound() {
+function soundOnOff() {
     soundOn = 1 - soundOn;
     if (soundOn) {
         document.getElementById('soundButton').value = "SOUND OFF";
@@ -240,7 +245,7 @@ function sound() {
     }
 }
 
-function pauseIt() {
+function pauseOnOff() {
     pauseState = 1 - pauseState;
     if (pauseState) {
         document.getElementById('pauseButton').value = "RUN";
@@ -262,7 +267,7 @@ function selected() {
 function buttonClicked(i) {
     if (pauseState) {
         if (buttonText[highlightButton].kind == "SayIt") {
-            pauseIt();
+            pauseOnOff();
         }
         return;
     }
@@ -366,7 +371,7 @@ function stateChanged() {
         doButton(highlightButton);
 
         if (buttonText[highlightButton].kind == 'SayIt') {
-            pauseIt();
+            pauseOnOff();
         }
 
         state = 0;
