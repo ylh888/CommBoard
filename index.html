@@ -1,80 +1,91 @@
 <!DOCTYPE html>
-        <!-- CopyRight (c) Ability Spectrum 2014
+<!-- CopyRight (c) Ability Spectrum 2014
         2014-February-13
         This document maybe used in its entirety, without change, freely as long as this notice is preserved -->
 <html>
+
 <head>
-    <title>CommBoard</title>
+    <title>Comm Board by AS</title>
     <script src="./commboard.js"></script>
     <LINK REL=StyleSheet HREF="./cbstyle.css" TYPE="text/css" MEDIA=screen>
 </head>
-<body onload="startTime();getStarted();">
-<div class="sansserif" id="container" tabindex="-1" >
 
-    <div id="header" tabindex="-1" style="background-color:#FFA500;">
-        <h3 style="margin-bottom:2px;">CommBoard</h3>
-        <div id="testButton" tabindex="-1">
-            <button onclick="testMe();">TEST</button>
+<body onload="startTime();getStarted();">
+    <div id="container" class="sansserif" tabindex="-1">
+
+        <div id="header" tabindex="-1" style="color:#FFA500; bottom:4px;">
+            <div style="float:left; font-size: 120%; ">
+                <b>CommBoard</b>
+            </div>
+
+            <div id="menu"  tabindex="-1" style="font-size:80%; float:right; clear;">
+
+                <input type='button' id="setupButton" onclick="SetUp();" value="SETUP" tabindex="-1"></input>
+
+                <input type='button' class="menuButtons" id="soundButton" onclick="soundOnOff();" value="SOUND ON" tabindex="-1"></input>
+
+                <input type='button' class="menuButtons" id="selectButton" onclick="selected();" value="SELECT" tabindex="-1"></input>
+
+                <input type='button' class="menuButtons" id="pauseButton" onclick="pauseOnOff();" value="START" tabindex="-1"></input>
+            </div>
+
         </div>
 
-    </div>
+        <div id="content" onkeydown="keyReceived();">
+            <!-- <script>chrome.tts.speak('Hello, world.');</script> -->
+            <!--<script>getStarted();</script>-->
 
+        </div>
 
-    <div id="content" style="width:710px;height:330px;float:left;" onkeydown="keyReceived();">
-        <!-- <script>chrome.tts.speak('Hello, world.');</script> -->
-        <!--<script>getStarted();</script>
-        -->
+        <div id="time_client" style="float:left; " tabindex="-1">
+            <div id="timeDisplay" style="float:left; " tabindindex="-1">clientTxt</div>
+            <div id="clientTxt" style="float:left; " tabindindex="-1">clientTxt</div>
+        </div>
 
-    </div>
+        <div id="bottom_part" style="float:left;" tabindex="-1">
 
-    <div id="menu" tabindex="-1" style="background-color:#FFD700;height:330px;width:100px;float:left;">
-        <br>
-        <input type='button' id="pauseButton" onclick="pauseOnOff();" value="START" tabindex="-1" ></input> <br><br>
-        <input type='button' id="soundButton" onclick="soundOnOff();" value="SOUND ON" tabindex="-1" ></input> <br><br>
-        <input type='button' id="selectButton" onclick="selected();" value="SELECT" tabindex="-1" ></input> <br><br>
+            <div id="debug" tabindex="-1" style="float:left; font-size: 80%;">[Debug]</div>
 
-    </div>
+            <div id="footer" tabindex="-1" style="color:#FFA500; text-align:right; font-size: 80%; ">
+                by
+                <b>Ability Spectrum</b>
+                <small>v.701</small>
+            </div>
+            <div id="videoSetUp" tabindex="-1" style=" "></div>
 
-    <div id="footer" tabindex="-1" style="background-color:#FFA500;clear:both;text-align:center;s">
-        <small tabindex="-1">by Ability Spectrum v0.700</small>
-    </div>
-    <div id="clientTxt" tabindex="-1" >clientTxt </div>
-    <div id="debug" tabindex="-1"><small>[Debug]</small>    </div>
+        </div>
 
-    <div id="SayIt" tabindex="-1">
-    <div id="videoSetUp" tabindex="-1" style=" "></div>
+        <div id="SayIt" tabindex="-1">
 
-<!--
+            <!--
     <audio controls autoplay="autoplay">
         <source src="http://translate.google.com/translate_tts?tl=fr&amp;q=accueil" type="audio/mpeg">
     </audio>
 -->
-    <script>
-     (function () {
-        var audioElement2 = document.createElement('audio');
-        audioElement2.setAttribute('src', 'http://translate.google.com/translate_tts?tl=fr&q=bienvenu');
-        audioElement2.controls = true;
-        audioElement2.loop = false;
-        audioElement2.load();
-        audioElement2.play();
+            <script>
+                (function() {
+                    var audioElement2 = document.createElement('audio');
+                    audioElement2.setAttribute('src', 'http://translate.google.com/translate_tts?tl=fr&q=bienvenu');
+                    audioElement2.controls = true;
+                    audioElement2.loop = false;
+                    audioElement2.load();
+                    audioElement2.play();
 
-    })();
-
-
-    /*setTimeout((function() {
-        alert("xx")
-        startTime();
-
-        getStarted();
-        alert("here");
-
-    }),1000);
-    */
-
-    </script>
+                })();
 
 
-</div>
+                /*setTimeout((function() {
+                 alert("xx")
+                 startTime();
+                 getStarted();
+                alert("here");
+
+                 }),1000);
+                 */
+            </script>
+        </div>
+    </div>
 
 </body>
+
 </html>
