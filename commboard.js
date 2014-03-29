@@ -16,7 +16,9 @@ var debugMessage = "(space)=click | s=select | p=pause on/off | v=voice over sim
     buttonPresented = 0,
     debouncetime = 100,
     selectPressed = 0,
-    inSetup = 1;
+    inSetup = 0,
+    Debugging=1,
+    Stage = "pause";
 
 // state:: 0=cycle row, 1=cycle column, 2= action on button (row,col)
 
@@ -170,6 +172,7 @@ document.getElementById('clientTxt').innerHTML = clientTxt;
     }, 500);
 }
 
+function addDebug(s) { if(Debugging) debugMessage += s; }
 
 function playmp3(i) {
     document.getElementById("audio" + i).play();
@@ -184,7 +187,6 @@ function playmp3(i) {
         audioElement2.play();
     }());
 }
-
 
 function makeAudio(t) {
 
@@ -257,13 +259,11 @@ function pauseOnOff() {
     pauseState = 1 - pauseState;
     if (pauseState) {
         document.getElementById('pauseButton').value = "RUN";
-        doVideoSetUp();
-
+        //doVideoSetUp();
         //debugMessage = "Paused.";
     } else {
         document.getElementById('pauseButton').value = "PAUSE";
         endVideoSetUp();
-
         //debugMessage = "Running ...";
     }
 }
@@ -273,7 +273,117 @@ function selected() {
     selectPressed = 1;
     stateChanged();
 }
+function doRow(i) {
+    /*
+    var now = new Date();
+    if ((now - buttonPresented) < debouncetime) {
+        // unwind to last button
+        setRow(highlightRow, 'Off');
+        --highlightRow;
+        if (highlightRow < 0) highlightRow = nRows - 1;
+    }
+*/
+    selectedRow = highlightRow;
+    setRowButtons(selectedRow, "Off");
+    highlightButton = selectedRow * nCols;
+    playmp3(highlightButton);
+    setButton(highlightButton, 'On');
+    document.getElementById("btn" + highlightButton).focus();
 
+    setTimeout(function () {
+        selectPressed = 0;
+    }, 1600);
+}
+function advRow(){
+    //alert("state 0 and no press")
+    setRow(highlightRow, "Off");
+    highlightRow = (++highlightRow) % nRows;
+    if (soundOn) playmp3(highlightRow * nCols);
+    setRow(highlightRow, "On");
+    document.getElementById("btn" + (highlightRow * nCols)).focus();
+    setTimeout(function () {
+        checkState()
+    }, 1600);
+}
+
+function doCol(i) {
+    /*
+    var now = new Date();
+    if ((now - buttonPresented) < debouncetime) {
+        // unwind to last button
+        setButton(highlightButton, "Off");
+        --highlightButton;
+        if (highlightButton < 0) highlightButton = nCols - 1;
+    }
+    */
+    setRow(selectedRow, "Off");
+
+    setButton(highlightButton, 'Off');
+
+    if (buttonText[highlightButton].kind != "SayAll") {
+        playmp3(highlightButton);
+    }
+
+    doButton(highlightButton);
+
+    if (buttonText[highlightButton].kind == 'SayIt') {
+        pauseOnOff();
+    }
+
+    advRow();
+
+    setTimeout(function () {
+        selectPressed = 0;
+    }, 2000);
+
+}
+
+function clearCol(i) {
+
+}
+
+function clicked(i) {
+    if (pauseState) return;
+
+    switch(Stage) {
+        case "advRow":
+            doRow();
+            break;
+        case "advCol":
+            doCol();
+            break;
+        default:
+            addDebug("*d*");
+        break;
+    }
+}
+
+function checkStage() {
+    if (state == 0) {
+        //alert("state 0 and no press")
+        setRow(highlightRow, "Off");
+        highlightRow = (++highlightRow) % nRows;
+        if (soundOn) playmp3(highlightRow * nCols);
+        setRow(highlightRow, "On");
+        document.getElementById("btn" + (highlightRow * nCols)).focus();
+        setTimeout(function () {
+            checkState()
+        }, 1600);
+    } else if (state == 1) {
+        setButton(highlightButton, 'Off');
+        highlightButton = (++highlightButton) % nCols + selectedRow * nCols;
+        if (soundOn) playmp3(highlightButton);
+        document.getElementById("btn" + highlightButton).focus();
+        setButton(highlightButton, 'On');
+        setTimeout(function () {
+            checkState()
+        }, 2100);
+    } else if (state == 2) {
+        setTimeout(function () {
+            checkState()
+        }, 200);
+    }
+}
 function buttonClicked(i) {
     if (pauseState) {
         if (buttonText[highlightButton].kind == "SayIt") {
@@ -287,7 +397,7 @@ function buttonClicked(i) {
 }
 
 function doButton(i) {
-    //debugMessage = "do " + i + " ";
+    addDebug(" do"+i);
 
     switch (buttonText[i].kind) {
     case "Alpha":
@@ -471,6 +581,7 @@ function setTable() {
 
             t += "<div> <input type='button' class='btnOff' " +
                 "onclick ='buttonClicked(" + j + ");' id='btn" + j +
+                //"onclick ='clicked(" + j + ");' id='btn" + j +
                 "' value=" + buttonText[j].t +
                 "></input></div> " +
                 "<div class='audioclass'> <audio id='audio" + j +
@@ -496,7 +607,7 @@ function getStarted() {
     highlightRow = nRows - 1;
     pauseState = 1;
 
-    doVideoSetUp();
+    //doVideoSetUp();
 
     checkState(); // kick it off!!
     document.getElementById("pauseButton").focus();
@@ -511,12 +622,19 @@ function tmpplaymp3(i) {
     }
     else {
         document.getElementById("pauseButton").focus();
+        //setUp();
     }
 }
 
-function SetUp(){
-
+function setUp(){
+    if(inSetup) {
+        endVideoSetUp();
+        inSetup = 0;
+    } else {
+        pauseState = 1;
+        inSetup = 1;
         doVideoSetUp();
+    }
 }
 
 function doVideoSetUp() {
