@@ -588,8 +588,8 @@ function setTable() {
                 "onclick ='buttonClicked(" + j + ");' id='btn" + j +
                 //"onclick ='clicked(" + j + ");' id='btn" + j +
                 "' value=" + buttonText[j].t +
-                "></input> " +
-                "<audio id='audio" + j +
+                "></input> </div>" +
+                "<div><audio  id='audio" + j +
                 "' preload='auto' src='img/fr_" + buttonText[j].t.toLowerCase() +
                 ".mp3'></audio>" +
                 "</div>";
