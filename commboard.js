@@ -14,7 +14,7 @@ var debugMessage = "(space)=click | s=select | p=pause on/off | v=voice over sim
     highlightButton = -1,
     state = 0,
     buttonPresented = 0,
-    debouncetime = 100,
+    debouncetime = 300,
     selectPressed = 0,
     inSetup = 0,
     Debugging=1,
@@ -449,13 +449,16 @@ function testMe() {
 function stateChanged() {
     // select pressed  - state transition
 
-    if (state == 0) {
+    if (state == 0) {  //from scanning row to scanning col
         var now = new Date();
         if ((now - buttonPresented) < debouncetime) {
             // unwind to last button
+            addDebug("db0")
             setRow(highlightRow, 'Off');
             --highlightRow;
-            if (highlightRow < 0) highlightRow = nRows - 1;
+            if (highlightRow < 0) highlightRow = nRows-1;
+            selectedRow = highlightRow;
+            buttonPresented = new Date();
         }
 
         selectedRow = highlightRow;
@@ -471,11 +474,12 @@ function stateChanged() {
         setTimeout(function () {
             selectPressed = 0;
         }, 1600);
-    } else if (state == 1) {
+    } else if (state == 1) {  // from scanning col to do button
 
         var now = new Date();
         if ((now - buttonPresented) < debouncetime) {
             // unwind to last button
+            addDebug("db1")
             setButton(highlightButton, "Off");
             --highlightButton;
             if (highlightButton < 0) highlightButton = nCols - 1;
@@ -514,6 +518,7 @@ function setRow(r, OnOff) {
     if (OnOff == "On") {
         document.getElementById("btn" + r * nCols).focus();
     }
+    if(OnOff) buttonPresented = new Date();
 }
 
 function setRowButtons(r, OnOff) {
@@ -526,7 +531,7 @@ function setRowButtons(r, OnOff) {
 function setButton(r, OnOff) {
     document.getElementById("btn" + r).focus();
     document.getElementById("btn" + r).setAttribute("class", "btn" + OnOff);
-    buttonPresented = new Date();
+    if(OnOff) buttonPresented = new Date();
 }
 
 function checkState() {
