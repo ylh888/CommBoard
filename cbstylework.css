@@ -1,0 +1,69 @@
+
+.invisible {
+    display: none;
+    visibility: hidden;
+}
+
+div.serif{font-family:"Times New Roman",Times,serif;}
+div.sansserif{font-family:Arial,Helvetica,sans-serif;}
+
+/* div#debug {visibility:hidden; display:none; style="font: bold 40%;"} */
+
+/* div.audioclass { visibility:hidden; display:none; } */
+
+div#testButton {visibility:hidden; display: none;}
+
+div#SayIt {autoplay;visibility:hidden}
+
+div#container {width:714px;}
+div#time_client {width:714px}
+div#bottom_part {width:714px}
+/*div.content {background-color:#EEEEEE;height:800px;width:600px;float:left;}
+div.menu {background-color:#FFD700;height:800px;width:100px;float:left; } */
+
+div.rowOn  { float:left;
+    width: 714px;
+    height: 54px;
+    color: yellow;
+    background-color: yellowgreen;
+}
+div.rowOff { float:left;
+    width: 714px;
+    height: 54px;
+
+    //background-color: ghostwhite;
+}
+
+input.btnOn {color:darkred; font: bold 150%'trebuchet ms',helvetica,sans-serif; float:left;
+    margin: 6px 0px 4px 8px;
+    border-color: ghostwhite;
+    background-color: yellow;
+    width: 110px; height:40px;
+}
+
+input.btnOff {color:darkblue; font: bold 150%'trebuchet ms',helvetica,sans-serif; float:left;
+    margin: 6px 0px 4px 8px;
+    border-color: ghostwhite;
+    background-color:ghostwhite;
+    width: 110px; height:40px;
+}
+
+input.menuButtons {color:red; font: bold 100%'trebuchet ms',helvetica,sans-serif;
+    margin: 6px 0px 4px 8px;
+    width: 110px; height:25px; clear;
+    border-color: lightcyan;
+    background-color: lightcyan;
+}
+input#setupButton {color:red; font: bold 100%'trebuchet ms',helvetica,sans-serif;
+    margin: 6px 0px 4px 8px;
+    width: 110px; height:25px; clear;
+    border-color: lightcyan;
+    background-color: lightcyan;
+    /* visibility:hidden; display:none;
+    */
+}
+
+div#timeDisplay {color:royalblue; font: bold 90%'trebuchet ms',helvetica,sans-serif;}
+div#clientTxt {color:royalblue; font: bold 200%'trebuchet ms',helvetica,sans-serif;}
+
+

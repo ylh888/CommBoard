@@ -2,6 +2,7 @@
  * Created by ylh on 14-03-13.
  */
 var debugMessage = "(space)=click | s=select | p=pause on/off | v=voice over simulation on/off",
+    standardMessage = (function () { return debugMessage; } )();
     clientTxt = "",
     inc = 0,
     nRows = 6,
@@ -15,7 +16,11 @@ var debugMessage = "(space)=click | s=select | p=pause on/off | v=voice over sim
     state = 0,
     buttonPresented = 0,
     debouncetime = 100,
-    selectPressed = 0;
+    selectPressed = 0,
+    inSetup = 0,
+    Debugging=1,
+    Stage = "pause";
+
 // state:: 0=cycle row, 1=cycle column, 2= action on button (row,col)
 
 var buttonText = [{
@@ -37,9 +42,9 @@ var buttonText = [{
         "t": "Non",
         kind: "SayIt"
     },
-    
+
     // row 1
-        {
+    {
         "t": "e",
         kind: "Alpha"
     }, {
@@ -60,7 +65,7 @@ var buttonText = [{
     },
 
     // row 2
-        {
+    {
         "t": "i",
         kind: "Alpha"
     }, {
@@ -81,7 +86,7 @@ var buttonText = [{
     },
 
     // row 3
-        {
+    {
         "t": "o",
         kind: "Alpha"
     }, {
@@ -102,7 +107,7 @@ var buttonText = [{
     },
 
      // row 4
-        {
+    {
         "t": "u",
         kind: "Alpha"
     }, {
@@ -123,7 +128,7 @@ var buttonText = [{
     },
 
      // row 5
-        {
+    {
         "t": "espace",
         kind: "Subs",
         substitute: " "
@@ -145,16 +150,22 @@ var buttonText = [{
     },
 ];
 
+var dayOfWeek = ["Sunday", "Monday","Tuesday", "Wednesday","Thursday","Friday","Saturday"];
+
+var today = new Date();
+var theDay = dayOfWeek[today.getDay()];
 
 function startTime() {
-    var today = new Date();
+    today = new Date();
     var h = today.getHours();
     var m = today.getMinutes();
     var s = today.getSeconds();
     // add a zero in front of numbers<10
     m = m < 10 ? "0" + m : m;
     s = s < 10 ? "0" + s : s;
-    document.getElementById('clientTxt').innerHTML = "[" + h + ":" + m + ":" + s + "] " + clientTxt;
+    document.getElementById('timeDisplay').innerHTML = theDay +
+        "<br>" + h + ":" + m + ":" + s ;
+    document.getElementById('clientTxt').innerHTML = clientTxt;
     document.getElementById('debug').innerHTML = debugMessage;
 
     t = setTimeout(function () {
@@ -162,6 +173,7 @@ function startTime() {
     }, 500);
 }
 
+function addDebug(s) { if(Debugging) debugMessage += s; }
 
 function playmp3(i) {
     document.getElementById("audio" + i).play();
@@ -176,7 +188,6 @@ function playmp3(i) {
         audioElement2.play();
     }());
 }
-
 
 function makeAudio(t) {
 
@@ -216,17 +227,17 @@ function keyReceived() {
     switch (keychar) {
     case 's':
     case 'S':
-        //debugMessage += " 's' ";
+        addDebug(" 's'");
         selected();
         break;
     case 'p':
     case 'P':
-        //debugMessage += " 'p'";
+        addDebug(" 'p'");
         pauseOnOff();
         break;
     case 'v':
     case 'V':
-        //debugMessage += " 'v'";
+        addDebug(" 'v'");
         soundOnOff();
         break;
     }
@@ -249,7 +260,7 @@ function pauseOnOff() {
     pauseState = 1 - pauseState;
     if (pauseState) {
         document.getElementById('pauseButton').value = "RUN";
-        doVideoSetUp();
+        //doVideoSetUp();
         //debugMessage = "Paused.";
     } else {
         document.getElementById('pauseButton').value = "PAUSE";
@@ -263,7 +274,117 @@ function selected() {
     selectPressed = 1;
     stateChanged();
 }
+function doRow(i) {
+    /*
+    var now = new Date();
+    if ((now - buttonPresented) < debouncetime) {
+        // unwind to last button
+        setRow(highlightRow, 'Off');
+        --highlightRow;
+        if (highlightRow < 0) highlightRow = nRows - 1;
+    }
+*/
+    selectedRow = highlightRow;
+    setRowButtons(selectedRow, "Off");
+    highlightButton = selectedRow * nCols;
+    playmp3(highlightButton);
+    setButton(highlightButton, 'On');
+    document.getElementById("btn" + highlightButton).focus();
 
+    setTimeout(function () {
+        selectPressed = 0;
+    }, 1600);
+}
+function advRow(){
+    //alert("state 0 and no press")
+    setRow(highlightRow, "Off");
+    highlightRow = (++highlightRow) % nRows;
+    if (soundOn) playmp3(highlightRow * nCols);
+    setRow(highlightRow, "On");
+    document.getElementById("btn" + (highlightRow * nCols)).focus();
+    setTimeout(function () {
+        checkState()
+    }, 1600);
+}
+
+function doCol(i) {
+    /*
+    var now = new Date();
+    if ((now - buttonPresented) < debouncetime) {
+        // unwind to last button
+        setButton(highlightButton, "Off");
+        --highlightButton;
+        if (highlightButton < 0) highlightButton = nCols - 1;
+    }
+    */
+    setRow(selectedRow, "Off");
+
+    setButton(highlightButton, 'Off');
+
+    if (buttonText[highlightButton].kind != "SayAll") {
+        playmp3(highlightButton);
+    }
+
+    doButton(highlightButton);
+
+    if (buttonText[highlightButton].kind == 'SayIt') {
+        pauseOnOff();
+    }
+
+    advRow();
+
+    setTimeout(function () {
+        selectPressed = 0;
+    }, 2000);
+
+}
+
+function clearCol(i) {
+
+}
+
+function clicked(i) {
+    if (pauseState) return;
+
+    switch(Stage) {
+        case "advRow":
+            doRow();
+            break;
+        case "advCol":
+            doCol();
+            break;
+        default:
+            addDebug("*d*");
+        break;
+    }
+}
+
+function checkStage() {
+    if (state == 0) {
+        //alert("state 0 and no press")
+        setRow(highlightRow, "Off");
+        highlightRow = (++highlightRow) % nRows;
+        if (soundOn) playmp3(highlightRow * nCols);
+        setRow(highlightRow, "On");
+        document.getElementById("btn" + (highlightRow * nCols)).focus();
+        setTimeout(function () {
+            checkState()
+        }, 1600);
+    } else if (state == 1) {
+        setButton(highlightButton, 'Off');
+        highlightButton = (++highlightButton) % nCols + selectedRow * nCols;
+        if (soundOn) playmp3(highlightButton);
+        document.getElementById("btn" + highlightButton).focus();
+        setButton(highlightButton, 'On');
+        setTimeout(function () {
+            checkState()
+        }, 2100);
+    } else if (state == 2) {
+        setTimeout(function () {
+            checkState()
+        }, 200);
+    }
+}
 function buttonClicked(i) {
     if (pauseState) {
         if (buttonText[highlightButton].kind == "SayIt") {
@@ -277,7 +398,7 @@ function buttonClicked(i) {
 }
 
 function doButton(i) {
-    //debugMessage = "do " + i + " ";
+    addDebug(" do"+i);
 
     switch (buttonText[i].kind) {
     case "Alpha":
@@ -313,6 +434,12 @@ function doButton(i) {
 
 function testMe() {
     inc = 1 - inc;
+    if( inc ) {
+        debugMessage="";
+    } else {
+        debugMessage = standardMessage;
+    }
+    return;
 
     if (inc) {
         document.getElementById("row0").setAttribute("class", "rowOn");
@@ -320,9 +447,7 @@ function testMe() {
     } else {
         document.getElementById("row0").setAttribute("class", "rowOff");
         document.getElementById("row4").setAttribute("class", "rowOn");
-
     }
-
     debugMessage = "clicked " + (inc);
 }
 
@@ -415,7 +540,7 @@ function checkState() {
     if (pauseState) { // paused
         setTimeout(function () {
             checkState()
-        }, 300);
+        }, 1000);
     } else {
         if (selectPressed == 0) { // no key activity - steady state
             if (state == 0) {
@@ -450,13 +575,10 @@ function checkState() {
 
         //setTimeout( function(){checkState()}, 2000);
     }
-
 }
 
 function setTable() {
-
     var t = "<div id='menuTable'>";
-
     for (var i = 0; i < nRows; i++) {
         t += "<div class='rowOff' id='row" + i + "'>";
 
@@ -464,43 +586,39 @@ function setTable() {
 
             t += "<div> <input type='button' class='btnOff' " +
                 "onclick ='buttonClicked(" + j + ");' id='btn" + j +
+                //"onclick ='clicked(" + j + ");' id='btn" + j +
                 "' value=" + buttonText[j].t +
-                "></input></div> " +
-                "<div class='audioclass'> <audio id='audio" + j +
+                "></input> </div>" +
+                "<div><audio  id='audio" + j +
                 "' preload='auto' src='img/fr_" + buttonText[j].t.toLowerCase() +
-                ".mp3'></audio> </div>";
+                ".mp3'></audio>" +
+                "</div>";
         }
         t += "</div>";
     }
     t += "</div>";
-
-    //t+="<script>document.getElementById('btn" + highlightButton + "').focus();</script>";
-
     document.getElementById("content").innerHTML = t;
+
+    // doTabIndexOnce
+    // >>>>>>>>>>>>>>>> to implement - set tabindex=-1 in the rest of the nodes
+    for (var j = 0; j < nRows * nCols; j++) {
+        document.getElementById("btn" + j).setAttribute("tabindex", j + 1);
+    }
 }
 
 function getStarted() {
 
     setTable();
-    doTabIndexOnce();
 
     highlightRow = nRows - 1;
     pauseState = 1;
 
-    doVideoSetUp();
+    //doVideoSetUp();
 
     checkState(); // kick it off!!
     document.getElementById("pauseButton").focus();
     document.getElementById("pauseButton").select();
 }
-
-function myDelay(del) {
-    return;
-
-    var untilwhen = Date.now() + del;
-    while (untilwhen > Date.now()) {}
-}
-
 
 function tmpplaymp3(i) {
     playmp3(i);
@@ -510,11 +628,22 @@ function tmpplaymp3(i) {
     }
     else {
         document.getElementById("pauseButton").focus();
+        //setUp();
+    }
+}
+
+function setUp(){
+    if(inSetup) {
+        endVideoSetUp();
+        inSetup = 0;
+    } else {
+        pauseState = 1;
+        inSetup = 1;
+        doVideoSetUp();
     }
 }
 
 function doVideoSetUp() {
-    return; //******
 
     var t = "";
     for (var j = 0; j < nRows * nCols; j++) {
@@ -524,24 +653,26 @@ function doVideoSetUp() {
             " ></input>";
     }
     document.getElementById("videoSetUp").innerHTML = t;
+    document.getElementById("tmpB0").focus();
 
     /*
-    for (var i=0; i<nRows*nCols; i++) {
-        (function () {
-            audioElement2 = document.createElement('audio');
-            audioElement2.setAttribute('src', 'img/fr_' + buttonText[i].t.replace(/ /g,"+") + '.mp3' );
-            audioElement2.controls = true;
-            audioElement2.loop = false;
-            audioElement2.load();
-            audioElement2.play();
-        }());
-       // setTimeout( function() { simulatedClick(document.getElementById("tmpB"+j),"click");}, 800);
-    }
-    */
+     for (var i=0; i<nRows*nCols; i++) {
+     (function () {
+     audioElement2 = document.createElement('audio');
+     audioElement2.setAttribute('src', 'img/fr_' + buttonText[i].t.replace(/ /g,"+") + '.mp3' );
+     audioElement2.controls = true;
+     audioElement2.loop = false;
+     audioElement2.load();
+     audioElement2.play();
+     }());
+     // setTimeout( function() { simulatedClick(document.getElementById("tmpB"+j),"click");}, 800);
+     }
+     */
 }
 
 function endVideoSetUp() {
     document.getElementById("videoSetUp").innerHTML = "";
+    document.getElementById("pauseButton").focus();
 }
 
 function doTabIndexOnce() {
