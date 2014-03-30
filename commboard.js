@@ -2,6 +2,7 @@
  * Created by ylh on 14-03-13.
  */
 var debugMessage = "(space)=click | s=select | p=pause on/off | v=voice over simulation on/off",
+    standardMessage = (function () { return debugMessage; } )();
     clientTxt = "",
     inc = 0,
     nRows = 6,
@@ -164,7 +165,7 @@ function startTime() {
     s = s < 10 ? "0" + s : s;
     document.getElementById('timeDisplay').innerHTML = theDay +
         "<br>" + h + ":" + m + ":" + s ;
-document.getElementById('clientTxt').innerHTML = clientTxt;
+    document.getElementById('clientTxt').innerHTML = clientTxt;
     document.getElementById('debug').innerHTML = debugMessage;
 
     t = setTimeout(function () {
@@ -226,17 +227,17 @@ function keyReceived() {
     switch (keychar) {
     case 's':
     case 'S':
-        //debugMessage += " 's' ";
+        addDebug(" 's'");
         selected();
         break;
     case 'p':
     case 'P':
-        //debugMessage += " 'p'";
+        addDebug(" 'p'");
         pauseOnOff();
         break;
     case 'v':
     case 'V':
-        //debugMessage += " 'v'";
+        addDebug(" 'v'");
         soundOnOff();
         break;
     }
@@ -433,6 +434,12 @@ function doButton(i) {
 
 function testMe() {
     inc = 1 - inc;
+    if( inc ) {
+        debugMessage="";
+    } else {
+        debugMessage = standardMessage;
+    }
+    return;
 
     if (inc) {
         document.getElementById("row0").setAttribute("class", "rowOn");
@@ -440,9 +447,7 @@ function testMe() {
     } else {
         document.getElementById("row0").setAttribute("class", "rowOff");
         document.getElementById("row4").setAttribute("class", "rowOn");
-
     }
-
     debugMessage = "clicked " + (inc);
 }
 
@@ -583,10 +588,11 @@ function setTable() {
                 "onclick ='buttonClicked(" + j + ");' id='btn" + j +
                 //"onclick ='clicked(" + j + ");' id='btn" + j +
                 "' value=" + buttonText[j].t +
-                "></input></div> " +
-                "<div class='audioclass'> <audio id='audio" + j +
+                "></input> " +
+                "<audio id='audio" + j +
                 "' preload='auto' src='img/fr_" + buttonText[j].t.toLowerCase() +
-                ".mp3'></audio> </div>";
+                ".mp3'></audio>" +
+                "</div>";
         }
         t += "</div>";
     }

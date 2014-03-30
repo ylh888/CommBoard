@@ -13,54 +13,67 @@ div.sansserif{font-family:Arial,Helvetica,sans-serif;}
 
 div#testButton {visibility:hidden; display: none;}
 
-div#SayIt {autoplay;visibility:hidden}
+div#SayIt { visibility:hidden}
 
-div#container {width:714px;}
-div#time_client {width:714px}
-div#bottom_part {width:714px}
+div#container {width: 1024px; }
+div#header {clear: both; color:#FFA500;}
+div#content {width:100%;  bottom: 4px; clear: both;}
+div#time_client {width: 100%}
+div#bottom_part {width: 100%; clear:both;}
 /*div.content {background-color:#EEEEEE;height:800px;width:600px;float:left;}
-div.menu {background-color:#FFD700;height:800px;width:100px;float:left; } */
+*/
+div.menu {"font-size:80%; float:right; clear:both; }
 
-div.rowOn  { float:left;
-    width: 714px;
-    height: 54px;
+div.rowOn  {
+    clear: both;
+    float: left;
+    width: 1024px;
+    /*
+height: 20%;
+*/
     color: yellow;
     background-color: yellowgreen;
 }
-div.rowOff { float:left;
-    width: 714px;
-    height: 54px;
-
-    //background-color: ghostwhite;
+div.rowOff {
+    clear: both;
+    float: left;
+    width: 1024px;
+    /*
+height: 20%;
+*/
+    /* background-color: ghostwhite; */
 }
 
-input.btnOn {color:darkred; font: bold 150%'trebuchet ms',helvetica,sans-serif; float:left;
-    margin: 6px 0px 4px 8px;
+input.btnOn {color:darkred; font: bold 150%'trebuchet ms',helvetica,sans-serif;
+    float:left;
+    margin: 3px;
     border-color: ghostwhite;
     background-color: yellow;
-    width: 110px; height:40px;
+    width: 162px; height:80%;
 }
 
-input.btnOff {color:darkblue; font: bold 150%'trebuchet ms',helvetica,sans-serif; float:left;
-    margin: 6px 0px 4px 8px;
+input.btnOff {color:darkblue; font: bold 150%'trebuchet ms',helvetica,sans-serif;
+    float:left;
+    margin: 3px;
     border-color: ghostwhite;
     background-color:ghostwhite;
-    width: 110px; height:40px;
+    width: 162px; height:80%;
 }
 
-input.menuButtons {color:red; font: bold 100%'trebuchet ms',helvetica,sans-serif;
+input.menuButtons {
+    color:royalblue; font: bold 100%'trebuchet ms',helvetica,sans-serif;
     margin: 6px 0px 4px 8px;
-    width: 110px; height:25px; clear;
+    width: 20%; height:25px;
     border-color: lightcyan;
     background-color: lightcyan;
 }
-input#setupButton {color:red; font: bold 100%'trebuchet ms',helvetica,sans-serif;
-    margin: 6px 0px 4px 8px;
-    width: 110px; height:25px; clear;
-    border-color: lightcyan;
-    background-color: lightcyan;
-    /* visibility:hidden; display:none;
-    */
+
+input#pauseButton {
+    color:red;
+}
+input#testButton {
+    color:red;
+    display: none; visibility: hidden;
 }
 
 div#timeDisplay {color:royalblue; font: bold 90%'trebuchet ms',helvetica,sans-serif;}
