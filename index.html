@@ -4,44 +4,52 @@
         This document maybe used in its entirety, without change, freely as long as this notice is preserved -->
 <html>
 <head>
-    <title>CommBoard</title>
+    <title>v.803</title>
     <script src="./commboard.js"></script>
     <LINK REL=StyleSheet HREF="./cbstyle.css" TYPE="text/css" MEDIA=screen>
 </head>
 <body onload="startTime();getStarted();">
+
 <div class="sansserif" id="container" tabindex="-1" >
-
-    <div id="header" tabindex="-1" style="background-color:#FFA500;">
-        <h3 style="margin-bottom:2px;">CommBoard</h3>
-        <div id="testButton" tabindex="-1">
-            <button onclick="testMe();">TEST</button>
-        </div>
-
-    </div>
-
-
-    <div id="content" style="width:710px;height:330px;float:left;" onkeydown="keyReceived();">
+    <div id="content" onkeydown="keyReceived();">
         <!-- <script>chrome.tts.speak('Hello, world.');</script> -->
         <!--<script>getStarted();</script>
         -->
 
     </div>
 
-    <div id="menu" tabindex="-1" style="background-color:#FFD700;height:330px;width:100px;float:left;">
-        <br>
-        <input type='button' id="pauseButton" onclick="pauseOnOff();" value="START" tabindex="-1" ></input> <br><br>
-        <input type='button' id="soundButton" onclick="soundOnOff();" value="SOUND ON" tabindex="-1" ></input> <br><br>
-        <input type='button' id="selectButton" onclick="selected();" value="SELECT" tabindex="-1" ></input> <br><br>
+    <div id="header" tabindex="-1" style="background-color:#FFA500;">
+
+        <div id="testButton" tabindex="-1">
+            <button onclick="testMe();">TEST</button>
+        </div>
 
     </div>
 
-    <div id="footer" tabindex="-1" style="background-color:#FFA500;clear:both;text-align:center;s">
-        <small tabindex="-1">by Ability Spectrum v0.700</small>
+    <div id="menu" tabindex="-1">
+        <input type='button' id="pauseButton" onclick="pauseOnOff();" value="START" tabindex="-1" ></input>
+        <input type='button' id="soundButton" onclick="soundOnOff();" value="SOUND ON" tabindex="-1" ></input>
+        <input type='button' id="selectButton" onclick="selected();" value="SELECT" tabindex="-1" ></input>
+        <input type='button' id="setupButton" onclick="setUp();" value="SETUP" tabindex="-1" ></input>
     </div>
+    <div style="clear:both;"></div>
+
+    <div id="timeDisplay" tabindex="-1">time </div>
     <div id="clientTxt" tabindex="-1" >clientTxt </div>
-    <div id="debug" tabindex="-1"><small>[Debug]</small>    </div>
 
-    <div id="SayIt" tabindex="-1">
+    <div id="logo"><b>CommBoard</b><br>
+        <small tabindex="-1">by <b>Ability Spectrum</b></small>
+    </div>
+    <div style="clear:both;"></div>
+
+    <div id="debug"  tabindex="-1"><small>[Debug]</small>    </div>
+
+
+    <div style="clear:both;"></div>
+
+
+    <div style="clear:both;"></div>
+    <div id="SayIt" tabindex="-1"> </div>
     <div id="videoSetUp" tabindex="-1" style=" "></div>
 
 <!--

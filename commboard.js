@@ -2,7 +2,6 @@
  * Created by ylh on 14-03-13.
  */
 var debugMessage = "(space)=click | s=select | p=pause on/off | v=voice over simulation on/off",
-    standardMessage = (function () { return debugMessage; } )();
     clientTxt = "",
     inc = 0,
     nRows = 6,
@@ -227,17 +226,17 @@ function keyReceived() {
     switch (keychar) {
     case 's':
     case 'S':
-        addDebug(" 's'");
+        //debugMessage += " 's' ";
         selected();
         break;
     case 'p':
     case 'P':
-        addDebug(" 'p'");
+        //debugMessage += " 'p'";
         pauseOnOff();
         break;
     case 'v':
     case 'V':
-        addDebug(" 'v'");
+        //debugMessage += " 'v'";
         soundOnOff();
         break;
     }
@@ -434,12 +433,6 @@ function doButton(i) {
 
 function testMe() {
     inc = 1 - inc;
-    if( inc ) {
-        debugMessage="";
-    } else {
-        debugMessage = standardMessage;
-    }
-    return;
 
     if (inc) {
         document.getElementById("row0").setAttribute("class", "rowOn");
@@ -447,7 +440,9 @@ function testMe() {
     } else {
         document.getElementById("row0").setAttribute("class", "rowOff");
         document.getElementById("row4").setAttribute("class", "rowOn");
+
     }
+
     debugMessage = "clicked " + (inc);
 }
 
@@ -522,7 +517,7 @@ function setRow(r, OnOff) {
 }
 
 function setRowButtons(r, OnOff) {
-    return;
+    //return;
     for (var i = r * nCols; i < (r + 1) * nCols; i++) {
         setButton(i, OnOff);
     }
@@ -540,7 +535,7 @@ function checkState() {
     if (pauseState) { // paused
         setTimeout(function () {
             checkState()
-        }, 1000);
+        }, 30);
     } else {
         if (selectPressed == 0) { // no key activity - steady state
             if (state == 0) {
@@ -588,11 +583,10 @@ function setTable() {
                 "onclick ='buttonClicked(" + j + ");' id='btn" + j +
                 //"onclick ='clicked(" + j + ");' id='btn" + j +
                 "' value=" + buttonText[j].t +
-                "></input> " +
-                "<audio id='audio" + j +
+                "></input></div> " +
+                "<div class='audioclass'> <audio id='audio" + j +
                 "' preload='auto' src='img/fr_" + buttonText[j].t.toLowerCase() +
-                ".mp3'></audio>" +
-                "</div>";
+                ".mp3'></audio> </div>";
         }
         t += "</div>";
     }
@@ -613,7 +607,7 @@ function getStarted() {
     highlightRow = nRows - 1;
     pauseState = 1;
 
-    //doVideoSetUp();
+    doVideoSetUp();
 
     checkState(); // kick it off!!
     document.getElementById("pauseButton").focus();
@@ -625,6 +619,7 @@ function tmpplaymp3(i) {
     // simulatedClick(document.getElementById("tmpB"+i),"click");
     if (i < nCols * nRows - 1) {
         document.getElementById("tmpB" + (i + 1)).focus();
+        document.getElementById("tmpB" + (i + 1)).select();
     }
     else {
         document.getElementById("pauseButton").focus();
@@ -637,7 +632,7 @@ function setUp(){
         endVideoSetUp();
         inSetup = 0;
     } else {
-        pauseState = 1;
+        if(pauseState==0) pauseOnOff();
         inSetup = 1;
         doVideoSetUp();
     }
@@ -654,7 +649,7 @@ function doVideoSetUp() {
     }
     document.getElementById("videoSetUp").innerHTML = t;
     document.getElementById("tmpB0").focus();
-
+    document.getElementById("tmpB0").select();
     /*
      for (var i=0; i<nRows*nCols; i++) {
      (function () {
