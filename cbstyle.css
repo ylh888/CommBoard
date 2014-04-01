@@ -12,7 +12,7 @@ div#debug {font:60%; color:gray; }
 //div#debug {visibility:hidden; display:none; }
 div.audioclass { visibility:hidden; display:none; }
 
-//div#SayIt {autoplay;visibility:hidden}
+div#SayIt {autoplay;visibility:hidden}
 div#container {width:100%;}
 div#content { width:100%; clear:both; }
 div#header {width:100%; clear: both;}
