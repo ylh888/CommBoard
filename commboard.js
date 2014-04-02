@@ -14,8 +14,9 @@ var debugMessage = "(space)=click | s=select | p=pause on/off | v=voice over sim
     highlightButton = -1,
     state = 0,
     buttonPresented = 0,
-    debouncetime = 300, debounceMax = 1500,
+    debouncetime = 300, debounceMax = 5000,
     timeToNextRow = 1600, timeToNextCol = 2000,
+    adjustableDelay = 2000,
     selectPressed = 0,
     inSetup = 0,
     Debugging=0;
@@ -255,16 +256,24 @@ function soundOnOff() {
     }
 }
 
+function pauseOff() {
+    pauseState = 0;
+    document.getElementById('pauseButton').value = "PAUSE";
+    endVideoSetUp();
+}
+
+function pauseOn() {
+    pauseState = 1;
+    document.getElementById('pauseButton').value = "RUN";
+
+}
+
 function pauseOnOff() {
     pauseState = 1 - pauseState;
-    if (pauseState) {
-        document.getElementById('pauseButton').value = "RUN";
-        //doVideoSetUp();
-    } else {
-        document.getElementById('pauseButton').value = "PAUSE";
-        endVideoSetUp();
-    }
+    if(pauseState) pauseOn();
+    else pauseOff();
 }
+
 
 function selected() {
     if (pauseState) return;
@@ -494,6 +503,24 @@ function setTable() {
 
 function getStarted() {
 
+    $( "#slider" ).slider();
+    $( "#slider" ).slider({ min: 4 });
+    $( "#slider" ).slider({ max: 40 });
+    $( "#slider" ).slider( "value", adjustableDelay/100 );
+
+    document.getElementById("slider-value").innerHTML = adjustableDelay/1000.0;
+
+    $( "#slider" ).slider({
+        stop: function( event, ui ) {
+            adjustableDelay = $( "#slider" ).slider( "value" );
+            document.getElementById("slider-value").innerHTML = adjustableDelay/10;
+            adjustableDelay = adjustableDelay * 100;
+            timeToNextCol=adjustableDelay;
+            timeToNextRow=adjustableDelay;
+            event.preventDefault();
+        }
+    });
+
     setTable();
 
     highlightRow = nRows - 1;
@@ -563,6 +590,8 @@ function endVideoSetUp() {
 }
 
 // external code
+
+
 function simulatedClick(target, options) {
 
     var event = target.ownerDocument.createEvent('MouseEvents'),

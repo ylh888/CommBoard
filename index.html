@@ -4,9 +4,12 @@
         This document maybe used in its entirety, without change, freely as long as this notice is preserved -->
 <html>
 <head>
-    <title>v.901</title>
+    <title>v.902</title>
     <script src="./commboard.js"></script>
     <LINK REL=StyleSheet HREF="./cbstyle.css" TYPE="text/css" MEDIA=screen>
+    <link rel="stylesheet" href="../CommBoard/jquery/jquery-ui.css">
+    <script src="../CommBoard/jquery/jquery-1.10.2.js"></script>
+    <script src="../CommBoard/jquery/jquery-ui.js"></script>
 </head>
 <body onload="startTime();getStarted();">
 
@@ -31,6 +34,13 @@
         <input type='button' id="soundButton" onclick="soundOnOff();" value="SOUND ON" tabindex="-1" ></input>
         <input type='button' id="selectButton" onclick="selected();" value="SELECT" tabindex="-1" ></input>
         <input type='button' id="setupButton" onclick="setUp();" value="SETUP" tabindex="-1" ></input>
+        <div style = "float:right">
+            <div id="slider-value">2000</div>
+            <div id="slider" style=" width: 250px; "></div>
+        </div>
+
+
+
     </div>
     <div style="clear:both;"></div>
 
@@ -57,6 +67,7 @@
         <source src="http://translate.google.com/translate_tts?tl=fr&amp;q=accueil" type="audio/mpeg">
     </audio>
 -->
+
     <script>
      (function () {
         var audioElement2 = document.createElement('audio');
