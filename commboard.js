@@ -14,10 +14,12 @@ var debugMessage = "(space)=click | s=select | p=pause on/off | v=voice over sim
     highlightButton = -1,
     state = 0,
     buttonPresented = 0,
-    debouncetime = 300, debounceMax = 5000,
+    debouncetime = 300,
     timeToNextRow = 1600, timeToNextCol = 2000,
     adjustableDelay = 2000,
     selectPressed = 0,
+    rowDoneTimes= 0,
+    maxRowDoneTimes=2,
     inSetup = 0,
     Debugging=0;
 
@@ -283,8 +285,9 @@ function selected() {
 
 function buttonClicked(i) {
     if (pauseState) {
-        if (buttonText[highlightButton].kind == "SayIt") {
-            pauseOnOff();
+        if (buttonText[highlightButton].kind == "SayIt" ||
+            buttonText[highlightButton].kind == "SayAll" ) {
+            pauseOff();
         }
         return;
     }
@@ -344,6 +347,7 @@ function testMe() {
 
 function stateChanged() {
     // select pressed  - state transition
+    pauseOn();
 
     if (state == 0) {  //from scanning row to scanning col
         //var now = new Date();
@@ -367,36 +371,45 @@ function stateChanged() {
         setButton(highlightButton, 'On');
         document.getElementById("btn" + highlightButton).focus();
         state = 1;
+        selectPressed = 0;
+        pauseState=0;
+        /*
         setTimeout(function () {
             selectPressed = 0;
-        }, timeToNextCol);
-    } else if (state == 1) {  // from scanning col to do button
 
-        //var now = new Date();
+        }, timeToNextCol);
+        */
+    } else if (state == 1) {  // from scanning col to do button
         if (((new Date()) - buttonPresented) < debouncetime) {
-            // unwind to last button
+            // unwind to last row
             addDebug(" -1");
             setButton(highlightButton, "Off");
             --highlightButton;
-            if (highlightButton < 0) highlightButton = nCols - 1;
+            //if (highlightButton < 0) highlightButton = nCols - 1;
+            if (highlightButton < selectedRow*nCols) highlightButton = (selectedRow+1)*nCols - 1;
         }
         setRow(selectedRow, "Off");
-
         setButton(highlightButton, 'Off');
 
-        if (buttonText[highlightButton].kind != "SayAll") {
-            playmp3(highlightButton);
-        }
+        //        if (buttonText[highlightButton].kind != "SayAll") {
+//            playmp3(highlightButton);
+//        }
 
         doButton(highlightButton);
 
-        if (buttonText[highlightButton].kind == 'SayIt') {
-            pauseOnOff();
+        if (buttonText[highlightButton].kind == 'SayIt' ||
+            buttonText[highlightButton].kind == 'SayAll') {
+            pauseOn();
+            state = 0;
+            selectPressed = 0;
+            return;
         }
 
-        state = 0;
         setTimeout(function () {
+            rowDoneTimes = 0;
+            state = 0;
             selectPressed = 0;
+            pauseOff();
         }, timeToNextRow);
 
     } else {
@@ -436,7 +449,7 @@ function checkState() {
     if (pauseState) { // paused
         setTimeout(function () {
             checkState();
-        }, 30);
+        }, 10);
     } else {
         if (selectPressed == 0) { // no key activity - steady state
             if (state == 0) {
@@ -452,6 +465,18 @@ function checkState() {
             } else if (state == 1) {
                 setButton(highlightButton, 'Off');
                 highlightButton = (++highlightButton) % nCols + selectedRow * nCols;
+                if(highlightButton==selectedRow*nCols) {
+                    // repeated more than maxRowDoneTimes times => skip to next rows
+                    if(++rowDoneTimes>=maxRowDoneTimes) {
+                        state=0;
+                        rowDoneTimes=0;
+                        //highlightRow = (++highlightRow)%nRows;
+                        setTimeout(function () {
+                            checkState();
+                        }, timeToNextCol);
+                        return;
+                    }
+                }
                 if (soundOn) playmp3(highlightButton);
                 document.getElementById("btn" + highlightButton).focus();
                 setButton(highlightButton, 'On');
@@ -551,7 +576,7 @@ function setUp(){
         endVideoSetUp();
         inSetup = 0;
     } else {
-        if(pauseState==0) pauseOnOff();
+        if(pauseState==0) pauseOn();
         inSetup = 1;
         doVideoSetUp();
     }
