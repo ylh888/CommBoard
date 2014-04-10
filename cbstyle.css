@@ -22,7 +22,7 @@ div#timeDisplay {
 
 div#clientTxt {
     float:left;
-    color:darkblue; font: bold 150% 'trebuchet ms',helvetica,sans-serif;}
+    color:darkblue; font: bold 400% 'trebuchet ms',helvetica,sans-serif;}
 
 div#logo {color:#FFA500; float:right; display:
     table-cell; vertical-align: middle;
