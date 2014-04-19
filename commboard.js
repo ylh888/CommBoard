@@ -20,140 +20,17 @@ var CB = (function CB() {
     buttonPresented = 0,
     debouncetime = 300,
     timeToNextRow = 1600,
-    timeToNextCol = 2000,
-    adjustableDelay = 2000,
+    timeToNextCol = 3000,
+    adjustableDelay = 3000,
     rowDoneTimes = 0,
     maxRowDoneTimes = 2,
     Debugging = false;
 
   // state:: 0=cycle row, 1=cycle column
 
-  var buttonText = [{
-      "t": "a",
-      kind: "Alpha"
-    }, {
-      "t": "b",
-      kind: "Alpha"
-    }, {
-      "t": "c",
-      kind: "Alpha"
-    }, {
-      "t": "d",
-      kind: "Alpha"
-    }, {
-      "t": "Oui",
-      kind: "SayIt"
-    }, {
-      "t": "Non",
-      kind: "SayIt"
-    },
-
-    // row 1
-    {
-      "t": "e",
-      kind: "Alpha"
-    }, {
-      "t": "f",
-      kind: "Alpha"
-    }, {
-      "t": "g",
-      kind: "Alpha"
-    }, {
-      "t": "h",
-      kind: "Alpha"
-    }, {
-      "t": "Parler",
-      kind: "SayAll"
-    }, {
-      "t": "Rayer",
-      kind: "Erase"
-    },
-
-    // row 2
-    {
-      "t": "i",
-      kind: "Alpha"
-    }, {
-      "t": "j",
-      kind: "Alpha"
-    }, {
-      "t": "k",
-      kind: "Alpha"
-    }, {
-      "t": "l",
-      kind: "Alpha"
-    }, {
-      "t": "m",
-      kind: "Alpha"
-    }, {
-      "t": "n",
-      kind: "Alpha"
-    },
-
-    // row 3
-    {
-      "t": "o",
-      kind: "Alpha"
-    }, {
-      "t": "p",
-      kind: "Alpha"
-    }, {
-      "t": "q",
-      kind: "Alpha"
-    }, {
-      "t": "r",
-      kind: "Alpha"
-    }, {
-      "t": "s",
-      kind: "Alpha"
-    }, {
-      "t": "t",
-      kind: "Alpha"
-    },
-
-     // row 4
-    {
-      "t": "u",
-      kind: "Alpha"
-    }, {
-      "t": "v",
-      kind: "Alpha"
-    }, {
-      "t": "w",
-      kind: "Alpha"
-    }, {
-      "t": "x",
-      kind: "Alpha"
-    }, {
-      "t": "y",
-      kind: "Alpha"
-    }, {
-      "t": "z",
-      kind: "Alpha"
-    },
-
-     // row 5
-    {
-      "t": "espace",
-      kind: "Subs",
-      substitute: " "
-    }, {
-      "t": "effacer",
-      kind: "Delete"
-    }, {
-      "t": "arreter",
-      kind: "SayIt"
-    }, {
-      "t": "succion",
-      kind: "SayIt"
-    }, {
-      "t": "position",
-      kind: "SayIt"
-    }, {
-      "t": "bassin",
-      kind: "SayIt"
-    },
-];
+  var buttonText = CB2.menu2;
+  nRows = buttonText.nRows;
+  nCols = buttonText.nCols;
 
   var dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -358,7 +235,7 @@ var CB = (function CB() {
 
     if (state === 0) { //from scanning row to scanning col
       //var now = new Date();
-      if ((Date() - buttonPresented) < debouncetime) {
+      if (((new Date()) - buttonPresented) < debouncetime) {
         // unwind to last button
         addDebug(" -0");
         setRow(highlightRow, 'Off');
@@ -393,7 +270,9 @@ var CB = (function CB() {
         setButton(highlightButton, "Off");
         --highlightButton;
         //if (highlightButton < 0) highlightButton = nCols - 1;
-        if (highlightButton < selectedRow * nCols) highlightButton = (selectedRow + 1) * nCols - 1;
+        if (highlightButton < selectedRow * nCols) {
+            highlightButton = (selectedRow + 1) * nCols - 1;
+        }
       }
       setRow(selectedRow, "Off");
       setButton(highlightButton, 'Off');
@@ -540,10 +419,10 @@ var CB = (function CB() {
 
     $("#slider").slider();
     $("#slider").slider({
-      min: 4
+      min: 5
     });
     $("#slider").slider({
-      max: 40
+      max: 50
     });
     $("#slider").slider("value", adjustableDelay / 100);
 
@@ -600,7 +479,8 @@ var CB = (function CB() {
 
     var t = "";
     for (var j = 0, max = nRows * nCols; j < max; j++) {
-      t += "<input type='button' id='tmpB" + j + "' onclick='CB.tmpplaymp3(" + j +
+      t += "<input type='button' id='tmpB" + j +
+        "' onclick='CB.tmpplaymp3(" + j +
         ");' " +
         " value=" + buttonText[j].t +
         " ></input>";
@@ -628,9 +508,9 @@ var CB = (function CB() {
     document.getElementById("pauseButton").focus();
   }
 
+    
+    
   // external code
-
-
   function simulatedClick(target, options) {
 
     var event = target.ownerDocument.createEvent('MouseEvents'),
@@ -676,12 +556,10 @@ var CB = (function CB() {
 
     //Fire the event
     target.dispatchEvent(event);
-
-
   }
 
   return {
-    //        startTime: startTime,
+    // startTime: startTime,
     getStarted: getStarted,
     setUp: setUp,
     pauseOnOff: pauseOnOff,
