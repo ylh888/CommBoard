@@ -10,9 +10,10 @@ div.sansserif{font-family:Arial,Helvetica,sans-serif;}
 div#testButton {visibility:hidden; display: none;}
 div#debug {font:60%; color:gray; }
 //div#debug {visibility:hidden; display:none; }
-div.audioclass { visibility:hidden; display:none; }
+.ding { autoplay; controls; preload:auto;
+  loop:false; visibility:hidden; display:none;}
+div.audioclass { autoplay; visibility:hidden; display:none; }
 
-div#SayIt {autoplay;visibility:hidden}
 div#container {width:100%;}
 div#content { width:100%; clear:both; }
 div#header {width:100%; clear: both;}
@@ -52,7 +53,7 @@ div.rowOff { float:left;
     background-color: transparent;
 }
 
-input.btnOn {color:darkred; font: bold 150%'trebuchet ms',helvetica,sans-serif;
+.btnOn {color:darkred; font: bold 150%'trebuchet ms',helvetica,sans-serif;
     float:left;
     margin: 0.5%;
     border-color: yellow;
@@ -61,7 +62,7 @@ input.btnOn {color:darkred; font: bold 150%'trebuchet ms',helvetica,sans-serif;
     width: 11.5%; height: 70px;
 }
 
-input.btnOff {color:darkblue; font: bold 150%'trebuchet ms',helvetica,sans-serif;
+.btnOff {color:darkblue; font: bold 150%'trebuchet ms',helvetica,sans-serif;
     float:left;
     margin: 0.5%;
     border-color: ghostwhite;
