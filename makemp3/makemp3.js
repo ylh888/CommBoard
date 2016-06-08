@@ -51,9 +51,9 @@ var buttonText=
 
 
 for ( var i=0; i< buttonText.length; i++ ) {
-  console.log('curl -A "Mozilla" "http://translate.google.com/translate_tts?tl=fr&q=' +
+  console.log('curl -A "Mozilla" "http://translate.google.com/translate_tts?tl=en&q=' +
   buttonText[i].t +
-  '" > fr_' +
+  '" > en_' +
   buttonText[i].t +
   ".mp3");
 }
