@@ -197,10 +197,10 @@ var CB = (function CB() {
         }());
     }
 
-// <JN>
-// 
+    // <JN>
+    // 
 
-// <JN>
+    // <JN>
     var voice
 
     window.speechSynthesis.onvoiceschanged = function () {
@@ -209,10 +209,7 @@ var CB = (function CB() {
     }
 
     function getVoice(fallback, preferred) {
-        var voices
-          , voice
-          , fallbackVoices
-          , preferredVoices
+        var voices, voice, fallbackVoices, preferredVoices
 
         if (!window.speechSynthesis) {
             return false
@@ -222,14 +219,14 @@ var CB = (function CB() {
 
         if (voices.length) {
             voice = voices[0]
-            fallbackVoices = voices.filter(function(voice) {
-                return voice.lang.substring(0,2) === fallback}
-            )
+            fallbackVoices = voices.filter(function (voice) {
+                return voice.lang.substring(0, 2) === fallback
+            })
 
             if (fallbackVoices.length) {
-                preferredVoices = fallbackVoices.filter(function(voice) {
-                    return voice.lang === preferred}
-                )
+                preferredVoices = fallbackVoices.filter(function (voice) {
+                    return voice.lang === preferred
+                })
 
                 if (preferredVoices.length) {
                     voice = preferredVoices[0]
@@ -241,18 +238,18 @@ var CB = (function CB() {
 
         return voice
     }
-// </JN>
+    // </JN>
 
     var makeAudio = function makeAudio(t) {
 
-// <JN>
-      if (!voice) {
-        return
-      }
+        // <JN>
+        if (!voice) {
+            return
+        }
 
-      var utterance = new SpeechSynthesisUtterance(t);
-      utterance.voice = voice
-      window.speechSynthesis.speak(utterance);
+        var utterance = new SpeechSynthesisUtterance(t);
+        utterance.voice = voice
+        window.speechSynthesis.speak(utterance);
 
         // (function () {
         //     var audioElement2 = {};
@@ -265,7 +262,7 @@ var CB = (function CB() {
         //     audioElement2.play();
         // }());
         // 
-// </JN>
+        // </JN>
         /*
      document.getElementById("SayIt").innerHTML='<audio controls autoplay ' +
      'src="http://translate.google.com/translate_tts?tl=fr&q=' +
@@ -365,13 +362,13 @@ var CB = (function CB() {
 
         switch (buttonText[i].kind) {
         case "Alpha":
-// <JN>
+            // <JN>
             //clientTxt += buttonText[i].t.toLowerCase();
             //playmp3(i);
             alpha = buttonText[i].t.toLowerCase()
             clientTxt += alpha
             makeAudio(alpha)
-// </JN>
+                // </JN>
             break;
 
         case 'SayIt':
@@ -578,8 +575,8 @@ var CB = (function CB() {
 
                 t += "<div> <input type='button' class='btnOff' " +
                     "onclick ='CB.buttonClicked(" + j + ");' id='btn" + j +
-                //"onclick ='clicked(" + j + ");' id='btn" + j +
-                "' value=" + buttonText[j].t +
+                    //"onclick ='clicked(" + j + ");' id='btn" + j +
+                    "' value=" + buttonText[j].t +
                     "></input></div> " +
                     "<div class='audioclass'> <audio id='audio" + j +
                     "' preload='auto' src='img/fr_" + buttonText[j].t.toLowerCase() +
@@ -598,7 +595,7 @@ var CB = (function CB() {
     }
 
     var getStarted = function getStarted() {
-        
+
         startTime();
 
         $("#slider").slider();
@@ -635,7 +632,7 @@ var CB = (function CB() {
         document.getElementById("pauseButton").focus();
         document.getElementById("pauseButton").select();
 
-        
+
     };
 
     var tmpplaymp3 = function tmpplaymp3(i) {
@@ -746,7 +743,7 @@ var CB = (function CB() {
     }
 
     return {
-//        startTime: startTime,
+        //        startTime: startTime,
         getStarted: getStarted,
         setUp: setUp,
         pauseOnOff: pauseOnOff,

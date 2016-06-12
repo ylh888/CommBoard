@@ -5,13 +5,21 @@
 <html>
 
 <head>
-    <title>v.919</title>
+    <title>CommBoard v.920</title>
+
+
+    <!-- allows Add to Home Screen in Chrome -->
+    <meta name="viewport" content="width=device-width">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="192x192" href="/icon.png">
+    <link rel="manifest" href="manifest.json">
+
     <LINK REL=StyleSheet HREF="./cbstyle.css" TYPE="text/css" MEDIA=screen>
     <link rel="stylesheet" href="./jquery/jquery-ui.css">
     <script src="./jquery/jquery-1.10.2.js"></script>
     <script src="./jquery/jquery-ui.js"></script>
     <script src="./cbmenus.js"></script>
-    <script src="./commboard.js"></script>
+    <script src="./commboard baseline.js"></script>
 </head>
 
 <body onload="CB.getStarted();">
@@ -58,7 +66,7 @@
         </div>
 
         <div style="clear:both;"></div>
-        <audio id="ding" tabindex="-1" src='./img/ding3.mp3' ></audio>
+        <audio id="ding" tabindex="-1" src='./img/ding3.mp3'></audio>
         <div id="videoSetUp" tabindex="-1"></div>
         <div id="audioclass" tabindex="-1"></div>
 
@@ -69,7 +77,7 @@
 -->
 
         <script>
-            (function() {
+            (function () {
                 var audioElement2 = document.createElement('audio');
                 audioElement2.setAttribute('src', 'http://translate.google.com/translate_tts?tl=fr&q=bienvenu');
                 audioElement2.controls = true;
