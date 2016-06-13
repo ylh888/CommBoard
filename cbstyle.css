@@ -23,7 +23,7 @@ div#timeDisplay {
 
 div#clientTxt {
     float:left;
-    color:darkblue; font: bold 400% 'trebuchet ms',helvetica,sans-serif;}
+    color:darkblue; font: bold 200% 'trebuchet ms',helvetica,sans-serif;}
 
 div#logo {color:#FFA500; float:right; display:
     table-cell; vertical-align: middle;
@@ -43,13 +43,13 @@ div#slider-value {
 
 div.rowOn  { float:left;
     width: 100%;
-    height: 14%;
+    height: 11%;
     color: yellow;
     background-color: yellowgreen;
 }
 div.rowOff { float:left;
     width: 100%;
-    height: 14%;
+    height: 11%;
     background-color: transparent;
 }
 
@@ -59,7 +59,7 @@ div.rowOff { float:left;
     border-color: yellow;
     background-color: yellow;
     // width: 15.6%; height: 70px;
-    width: 11.5%; height: 70px;
+    width: 11.5%; height: 60px;
 }
 
 .btnOff {color:darkblue; font: bold 150%'trebuchet ms',helvetica,sans-serif;
@@ -68,7 +68,7 @@ div.rowOff { float:left;
     border-color: ghostwhite;
     background-color:ghostwhite;
     // width: 15.6%; height: 70px;
-    width: 11.5%; height: 70px;
+    width: 11.5%; height: 60px;
 }
 input#setupButton {color:royalblue; font: bold 100%'trebuchet ms',helvetica,sans-serif;
     float:right;

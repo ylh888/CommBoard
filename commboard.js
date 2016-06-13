@@ -2,8 +2,11 @@
  * Created by ylh on 14-03-13.
  */
 var CB = (function CB() {
+    var version = "1.0",
+        language = "english"; // "french";
 
-    var debugMessage = "(space)=click | s=select | p=pause on/off | v=voice over simulation on/off",
+    var instruction = "[" + version + "] (space)=click | s=select | p=pause on/off | v=voice over simulation on/off | d=debug on/off",
+        debugMessage = instruction,
         clientTxt = "",
         inc = 0,
         buttonText = [],
@@ -14,6 +17,7 @@ var CB = (function CB() {
         soundOn = false,
         selectPressed = false,
         inSetup = false,
+        autoScanning = false,
         highlightRow = -1,
         selectedRow = -1,
         highlightButton = -1,
@@ -29,8 +33,6 @@ var CB = (function CB() {
         Debugging = false;
 
     // state:: 0=cycle row, 1=cycle column
-
-
 
     var dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -56,7 +58,7 @@ var CB = (function CB() {
     };
 
     function addDebug(s) {
-        if (Debugging) debugMessage += s;
+        if (Debugging) debugMessage += '<br>' + s;
     }
 
     function ding() {
@@ -65,6 +67,11 @@ var CB = (function CB() {
 
     function playmp3(i) {
         var el = buttonText[i];
+
+        // with JN
+        makeAudio(el.t_announce || el.t);
+        addDebug('play ' + i);
+        return;
 
         // use t_announce if available, else use 't'
         var t_name = el.t_announce ?
@@ -89,6 +96,10 @@ var CB = (function CB() {
 
     function playAlt(i) {
         var el = buttonText[i];
+        // with JN
+        if (el.t_alt) makeAltAudio(el.t_alt);
+        return;
+
         // add t_alt if available
         var t_alt = el.t_alt ?
             el.t_alt.replace(/ /g, '+') : false;
@@ -107,8 +118,66 @@ var CB = (function CB() {
         }());
     }
 
+    var voice, //main voice
+        voice_alt; //alternate voice - set to English
+
+    window.speechSynthesis.onvoiceschanged = function () {
+        voice_alt = getVoice("en", "en-UK");
+        if (language == "french") {
+            voice = getVoice("fr", "fr-CA");
+            makeAudio('bienvenu');
+        } else {
+            voice = getVoice("en", "en-UK");
+            makeAudio("Welcome to Comm Board!   This is version" + version);
+        }
+        window.speechSynthesis.onvoiceschanged = null;
+    }
+
+    function getVoice(fallback, preferred) {
+        var voices, voice, fallbackVoices, preferredVoices
+
+        if (!window.speechSynthesis) {
+            return false
+        }
+
+        voices = window.speechSynthesis.getVoices()
+
+        if (voices.length) {
+            voice = voices[0]
+            fallbackVoices = voices.filter(function (voice) {
+                return voice.lang.substring(0, 2) === fallback
+            })
+
+            if (fallbackVoices.length) {
+                preferredVoices = fallbackVoices.filter(function (voice) {
+                    return voice.lang === preferred
+                })
+
+                if (preferredVoices.length) {
+                    voice = preferredVoices[0]
+                } else {
+                    voice = fallbackVoices[0]
+                }
+            }
+        }
+
+        return voice
+    }
+
     var makeAudio = function makeAudio(t) {
 
+        //JN
+        if (!voice) {
+            return
+        }
+
+        var utterance = new SpeechSynthesisUtterance(t);
+        utterance.voice = voice;
+        window.speechSynthesis.speak(utterance);
+        return;
+
+        /*
+        //old code does not work any more
         (function () {
             var audioElement2 = {};
             audioElement2 = document.createElement('audio');
@@ -119,27 +188,25 @@ var CB = (function CB() {
             audioElement2.load();
             audioElement2.play();
         }());
-        /*
+        
          document.getElementById("SayText").innerHTML='<audio controls autoplay ' +
          'src="http://translate.google.com/translate_tts?tl=fr&q=' +
          t.toLowerCase() +
          '" type="audio/mpeg"> </audio>';
          */
     };
-
     var makeAltAudio = function makeAltAudio(t) {
 
-        (function () {
-            var audioElement2 = {};
-            audioElement2 = document.createElement('audio');
-            audioElement2.setAttribute('src', 'http://translate.google.com/translate_tts?tl=en&q=' +
-                t);
-            audioElement2.controls = true;
-            audioElement2.loop = false;
-            audioElement2.load();
-            audioElement2.play();
-        }());
-    };
+        //JN
+        if (!voice_alt) {
+            return
+        }
+
+        var utterance = new SpeechSynthesisUtterance(t);
+        utterance.voice = voice_alt;
+        window.speechSynthesis.speak(utterance);
+        return;
+    }
 
     var keyReceived = function keyReceived() {
 
@@ -173,6 +240,12 @@ var CB = (function CB() {
             addDebug(' "v"');
             soundOnOff();
             break;
+        case 'd':
+        case 'D':
+            Debugging = !Debugging;
+            if (Debugging) debugMessage = instruction + '<br>Debugging';
+            else debugMessage = instruction;
+            break;
         }
         //Allow alphabetical keys, plus BACKSPACE and SPACE
         //return (keyunicode>=65 && keyunicode<=122 || keyunicode==8 || keyunicode==32)? true : false
@@ -202,9 +275,14 @@ var CB = (function CB() {
     }
 
     var pauseOnOff = function pauseOnOff() {
-        pauseState = !pauseState;
-        if (pauseState) pauseOn();
-        else pauseOff();
+        autoScanning = !autoScanning;
+        if (autoScanning) {
+            //            setRow(highlightRow, "On")
+            pauseOff();
+        } else {
+            //            setRow(highlightRow, "Off")
+            pauseOn();
+        }
     };
 
 
@@ -220,16 +298,19 @@ var CB = (function CB() {
     });
 
     var buttonClicked = function buttonClicked(i) {
+        doButton(i);
+        /*
         if (pauseState) {
-            if (buttonText[highlightButton].kind === "SayText" ||
-                buttonText[highlightButton].kind === "SayAlt" ||
-                buttonText[highlightButton].kind === "SayLine") {
+            if (buttonText[i].kind === "SayText" ||
+                buttonText[i].kind === "SayAlt" ||
+                buttonText[i].kind === "SayLine") {
                 pauseOff();
             }
             return;
         }
         selectPressed = true;
         stateChanged();
+        */
     };
 
     function nextMenu() {
@@ -239,6 +320,14 @@ var CB = (function CB() {
         } else {
             setTable(CB2.menu1);
         }
+        if (language == "french") {
+            if (buttonText === CB2.menu1_fr) {
+                setTable(CB2.menu2_fr);
+            } else {
+                setTable(CB2.menu1_fr);
+            }
+        }
+
 
         highlightRow = nRows - 1;
         pauseOff();
@@ -256,12 +345,12 @@ var CB = (function CB() {
 
         case "Alpha":
             clientTxt += buttonText[i].t.toLowerCase();
-            playmp3(i);
+            makeAudio(buttonText[i].t); //playmp3(i);
             break;
 
         case 'SayText':
             //clientTxt += buttonText[i].t;   //for now
-            playmp3(i);
+            makeAudio(buttonText[i].t); //playmp3(i);
             break;
 
         case 'SayAlt':
@@ -281,13 +370,13 @@ var CB = (function CB() {
                 ding();
             }, 1000);
             setTimeout(function () {
-                makeAudio(clientTxt.replace(/ /g, "+"));
+                makeAudio(clientTxt); //makeAudio(clientTxt.replace(/ /g, "+"));
             }, 2000);
             break;
 
         case 'Subs':
             clientTxt += buttonText[i].substitute;
-            playmp3(i);
+            makeAudio(buttonText[i].t); //playmp3(i);
             break;
 
         case 'Erase':
@@ -303,7 +392,9 @@ var CB = (function CB() {
 
             break;
         default:
-            console.log(":kind not found");
+            Debugging = true;
+            addDebug(":kind not found");
+            break;
         }
     }
 
@@ -609,6 +700,7 @@ var CB = (function CB() {
         pauseOn();
 
         doVideoSetUp();
+        endVideoSetUp(); // turn it right off - don't need this any more
 
         checkState(); // kick it off!!
         document.getElementById("pauseButton").focus();
@@ -753,6 +845,7 @@ var CB = (function CB() {
         keyReceived: keyReceived,
         soundOnOff: soundOnOff,
         buttonClicked: buttonClicked,
+        makeAudio: makeAudio,
         tmpMP3: tmpMP3,
     };
 

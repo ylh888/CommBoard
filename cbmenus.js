@@ -11,60 +11,112 @@
 
 
 var CB2 = ( function CB2() {
-  var menu0 = [
+
+  var menu1 = [
 //row 0
-	{ t: 'a', kind: 'Alpha' },
+  { t: 'A', kind: 'Alpha', t_announce: 'row eh' },
+  { t: 'a', kind: 'Alpha' },
   { t: 'b', kind: 'Alpha' },
   { t: 'c', kind: 'Alpha' },
   { t: 'd', kind: 'Alpha' },
-  { t: 'Oui', kind: 'SayText' },
-  { t: 'Non', kind: 'SayText' },
+  { t: 'space', kind: 'Subs', substitute: ' ' },
+  { t: '', kind: 'Skip' },
+  { t: '', kind: 'Skip' },
+
 
 // row 1
+  { t: 'E', kind: 'Alpha', t_announce: 'row e' },
   { t: 'e', kind: 'Alpha' },
   { t: 'f', kind: 'Alpha' },
   { t: 'g', kind: 'Alpha' },
   { t: 'h', kind: 'Alpha' },
-  { t: 'Parler', kind: 'SayLine' },
-  { t: 'Rayer', kind: 'Erase' },
+  { t: 'Delete', kind: 'Delete' },
+  { t: '', kind: 'Skip' },
+  { t: '', kind: 'Skip' },
 
 // row 2
+  { t: 'I', kind: 'Alpha', t_announce: 'row i' },
   { t: 'i', kind: 'Alpha' },
   { t: 'j', kind: 'Alpha' }, 
   { t: 'k', kind: 'Alpha' },
   { t: 'l', kind: 'Alpha' },
   { t: 'm', kind: 'Alpha' },
   { t: 'n', kind: 'Alpha' },
+  { t: '', kind: 'Skip' },
 
 // row 3
+  { t: 'O', kind: 'Alpha', t_announce: 'row o' },
   { t: 'o', kind: 'Alpha' },
   { t: 'p', kind: 'Alpha' },
-  { t: 'q', kind: 'Alpha' },
+  { t: 'qu', kind: 'Alpha' },
   { t: 'r', kind: 'Alpha' },
   { t: 's', kind: 'Alpha' },
   { t: 't', kind: 'Alpha' },
+  { t: '', kind: 'Skip' },
 
 // row 4
-	{ t: 'u', kind: 'Alpha' }, 
-	{ t: 'v', kind: 'Alpha' },
-	{ t: 'w', kind: 'Alpha' },
-	{ t: 'x', kind: 'Alpha' },
-	{ t: 'y', kind: 'Alpha' },
-	{ t: 'z', kind: 'Alpha' },
+  { t: 'U', kind: 'Alpha', t_announce: 'row u' },
+  { t: 'u', kind: 'Alpha' }, 
+    { t: 'v', kind: 'Alpha' },
+    { t: 'w', kind: 'Alpha' },
+    { t: 'x', kind: 'Alpha' },
+    { t: 'y', kind: 'Alpha' },
+    { t: 'z', kind: 'Alpha' },
+  { t: '', kind: 'Skip' },
 
-// row 5
-	{ t: 'espace', kind: 'Subs', substitute: ' ' },
-	{ t: 'effacer', kind: 'Delete' },
-	{ t: 'arreter', kind: 'SayText' },
-	{ t: 'succion', kind: 'SayText' },
-	{ t: 'position', kind: 'SayText' }, 
-	{ t: 'bassin', kind: 'SayText' },
+ // row 5   
+  { t: 'Needs', kind: 'Alpha', t_announce: 'needs' },
+  { t: 'Next', kind: 'NextMenu', t_announce: 'next menu'},
+  { t: 'Speak', kind: 'SayLine' },
+  { t: 'Erase', kind: 'Erase' },
+  { t: 'Suction', kind: 'SayAlt', t_alt: 'I need suction' },
+  { t: 'Position', kind: 'SayAlt', t_alt: 'I need to change position' }, 
+  { t: 'Bed pan', kind: 'SayAlt', t_alt: 'I need the bed pan' },
+  { t: 'Stop', kind: 'SayText' },
+    
+//  { t: '', kind: 'Skip' },
+//  { t: '', kind: 'Skip' },
+//  { t: '', kind: 'Skip' },
+//  { t: '', kind: 'Skip' },
+//  { t: '', kind: 'Skip' },
+//  { t: '', kind: 'Skip' },
+//  { t: '', kind: 'Skip' },
+//  { t: '', kind: 'Skip' },
   ];
+		
+	menu1.nRows = 6;
+	menu1.nCols = 8;
+  
+  var menu2 = [
+//row 0
+	{ t: 'Feelings', kind: 'Alpha' },
+	{ t: 'Hungry', kind: 'SayAlt', t_alt: 'I am hungry' }, 
+	{ t: 'Cold', kind: 'SayAlt', t_alt: 'I am cold' },
+	{ t: 'Hot', kind: 'SayAlt', t_alt: 'I am hot' },
+  { t: '', kind: 'Skip' },
+  { t: '', kind: 'Skip' },
+  { t: '', kind: 'Skip' },
+  { t: '', kind: 'Skip' },
+    
+  { t: 'Next', kind: 'NextMenu', t_announce: 'next menu'},
+  { t: '', kind: 'Skip' },
+  { t: '', kind: 'Skip' },
+  { t: '', kind: 'Skip' },
+  { t: '', kind: 'Skip' },
+  { t: '', kind: 'Skip' },
+  { t: '', kind: 'Skip' },
+  { t: '', kind: 'Skip' },
+  ];
+		
+	menu2.nRows = 2;
+	menu2.nCols = 8;
+  
+
+
+// french version
+
 	
-	menu0.nRows = 6;
-	menu0.nCols = 6;
-	
-  var menu1 = [
+  var menu1_fr = [
 //row 0
 	{ t: '1', kind: 'Alpha', t_announce: 'premiere' },
 	{ t: 'a', kind: 'Alpha' },
@@ -126,10 +178,10 @@ var CB2 = ( function CB2() {
   { t: '', kind: 'Skip' },
   ];
 		
-	menu1.nRows = 6;
-	menu1.nCols = 8;
+	menu1_fr.nRows = 6;
+	menu1_fr.nCols = 8;
   
-  var menu2 = [
+  var menu2_fr = [
 //row 0
 	{ t: 'sentir', kind: 'Alpha' },
 	{ t: 'avide', kind: 'SayAlt', t_alt: 'I am hungry' }, 
@@ -147,53 +199,72 @@ var CB2 = ( function CB2() {
   { t: '', kind: 'Skip' },
   { t: '', kind: 'Skip' },
   { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-/*
-  { t: 'suivant', kind: 'NextMenu' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-
-  { t: 'suivant', kind: 'NextMenu' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-
-  { t: 'suivant', kind: 'NextMenu' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-
-  { t: 'suivant', kind: 'NextMenu' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-  { t: '', kind: 'Skip' },
-*/
-  ];
-		
-	menu2.nRows = 2;
-	menu2.nCols = 8;
+  { t: '', kind: 'Skip' }
   
+  ];
+  
+  	menu2_fr.nRows = 2;
+	menu2_fr.nCols = 8;
+ 
+// menu0 NOT USED
+ var menu0 = [
+//row 0
+	{ t: 'a', kind: 'Alpha' },
+  { t: 'b', kind: 'Alpha' },
+  { t: 'c', kind: 'Alpha' },
+  { t: 'd', kind: 'Alpha' },
+  { t: 'Oui', kind: 'SayText' },
+  { t: 'Non', kind: 'SayText' },
+
+// row 1
+  { t: 'e', kind: 'Alpha' },
+  { t: 'f', kind: 'Alpha' },
+  { t: 'g', kind: 'Alpha' },
+  { t: 'h', kind: 'Alpha' },
+  { t: 'Parler', kind: 'SayLine' },
+  { t: 'Rayer', kind: 'Erase' },
+
+// row 2
+  { t: 'i', kind: 'Alpha' },
+  { t: 'j', kind: 'Alpha' }, 
+  { t: 'k', kind: 'Alpha' },
+  { t: 'l', kind: 'Alpha' },
+  { t: 'm', kind: 'Alpha' },
+  { t: 'n', kind: 'Alpha' },
+
+// row 3
+  { t: 'o', kind: 'Alpha' },
+  { t: 'p', kind: 'Alpha' },
+  { t: 'q', kind: 'Alpha' },
+  { t: 'r', kind: 'Alpha' },
+  { t: 's', kind: 'Alpha' },
+  { t: 't', kind: 'Alpha' },
+
+// row 4
+	{ t: 'u', kind: 'Alpha' }, 
+	{ t: 'v', kind: 'Alpha' },
+	{ t: 'w', kind: 'Alpha' },
+	{ t: 'x', kind: 'Alpha' },
+	{ t: 'y', kind: 'Alpha' },
+	{ t: 'z', kind: 'Alpha' },
+
+// row 5
+	{ t: 'espace', kind: 'Subs', substitute: ' ' },
+	{ t: 'effacer', kind: 'Delete' },
+	{ t: 'arreter', kind: 'SayText' },
+	{ t: 'succion', kind: 'SayText' },
+	{ t: 'position', kind: 'SayText' }, 
+	{ t: 'bassin', kind: 'SayText' },
+  ];
+	
+	menu0.nRows = 6;
+	menu0.nCols = 6;   
 	return {
-    menu0: menu0,
+    //menu0: menu0,
 		menu1: menu1,
-		menu2: menu2
-		};
+		menu2: menu2,
+        menu1_fr: menu1_fr,
+        menu2_fr: menu2_fr
+    };
 		
 }());
