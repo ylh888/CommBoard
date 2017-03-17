@@ -2,11 +2,11 @@
  * Created by ylh on 14-03-13.
  */
 var CB = (function CB() {
-    var version = "1.0",
+    var version = "1.1",
         language = "english"; // "french";
 
     var instruction = "[" + version + "] (space)=click | s=select | p=pause on/off | v=voice over simulation on/off | d=debug on/off",
-        debugMessage = instruction,
+        debugMessage = language + ' ' + instruction,
         clientTxt = "",
         inc = 0,
         buttonText = [],
@@ -133,6 +133,18 @@ var CB = (function CB() {
         window.speechSynthesis.onvoiceschanged = null;
     }
 
+    function voiceschanged() {
+        voice_alt = getVoice("en", "en-UK");
+        if (language == "french") {
+            voice = getVoice("fr", "fr-CA");
+            makeAudio('bienvenu');
+        } else {
+            voice = getVoice("en", "en-UK");
+            makeAudio("Welcome!");
+        }
+//        window.speechSynthesis.onvoiceschanged = null;
+    }
+
     function getVoice(fallback, preferred) {
         var voices, voice, fallbackVoices, preferredVoices
 
@@ -243,8 +255,8 @@ var CB = (function CB() {
         case 'd':
         case 'D':
             Debugging = !Debugging;
-            if (Debugging) debugMessage = instruction + '<br>Debugging';
-            else debugMessage = instruction;
+            if (Debugging) debugMessage = language + ' ' + instruction + '<br>Debugging';
+            else debugMessage = language + ' ' + instruction;
             break;
         }
         //Allow alphabetical keys, plus BACKSPACE and SPACE
@@ -277,10 +289,10 @@ var CB = (function CB() {
     var pauseOnOff = function pauseOnOff() {
         autoScanning = !autoScanning;
         if (autoScanning) {
-            //            setRow(highlightRow, "On")
+            setRow(highlightRow, "On")
             pauseOff();
         } else {
-            //            setRow(highlightRow, "Off")
+            setRow(highlightRow, "Off")
             pauseOn();
         }
     };
@@ -298,30 +310,35 @@ var CB = (function CB() {
     });
 
     var buttonClicked = function buttonClicked(i) {
-        doButton(i);
-        /*
+        //doButton(i);
+        //*
         if (pauseState) {
-            if (buttonText[i].kind === "SayText" ||
-                buttonText[i].kind === "SayAlt" ||
-                buttonText[i].kind === "SayLine") {
-                pauseOff();
-            }
+            //            if (buttonText[i].kind === "SayText" ||
+            //                buttonText[i].kind === "SayAlt" ||
+            //                buttonText[i].kind === "SayLine") {
+            //                pauseOff();
+            //            }
+            doButton(i);
             return;
         }
         selectPressed = true;
         stateChanged();
-        */
+        //*/
     };
 
     function nextMenu() {
+        addDebug("next menu -");
         // hardcoded!!!!!
-        if (buttonText === CB2.menu1) {
-            setTable(CB2.menu2);
-        } else {
-            setTable(CB2.menu1);
+        if (language === "english") {
+            if (buttonText.name === "english1") {
+                setTable(CB2.menu2);
+            } else {
+                setTable(CB2.menu1);
+            }
         }
-        if (language == "french") {
-            if (buttonText === CB2.menu1_fr) {
+        if (language === "french") {
+            addDebug("in french");
+            if (buttonText.name === "french1") {
                 setTable(CB2.menu2_fr);
             } else {
                 setTable(CB2.menu1_fr);
@@ -330,7 +347,7 @@ var CB = (function CB() {
 
 
         highlightRow = nRows - 1;
-        pauseOff();
+        //        pauseOff();    // 2016-11-29 Tue
         selectPressed = false;
         state = 0;
     }
@@ -340,11 +357,16 @@ var CB = (function CB() {
 
         switch (buttonText[i].kind) {
         case "NextMenu": // not reachable here
+            addDebug(" next menu")
             nextMenu();
             break;
 
         case "Alpha":
             clientTxt += buttonText[i].t.toLowerCase();
+            makeAudio(buttonText[i].t); //playmp3(i);
+            break;
+
+        case "RowHeading":
             makeAudio(buttonText[i].t); //playmp3(i);
             break;
 
@@ -436,6 +458,7 @@ var CB = (function CB() {
 
             if (buttonText[highlightButton].kind === 'NextMenu') {
                 nextMenu();
+                pauseOff(); // 2016-11-29 Tue
                 return;
             }
             playmp3(highlightButton);
@@ -464,6 +487,12 @@ var CB = (function CB() {
             setRow(selectedRow, "Off");
             setButton(highlightButton, 'Off');
 
+            // 2016-11-29 Tue
+            if (buttonText[highlightButton].kind === 'NextMenu') {
+                nextMenu();
+                pauseOff(); // 2016-11-29 Tue
+                return;
+            }
             //        if (buttonText[highlightButton].kind != "SayLine") {
             //            playmp3(highlightButton);
             //        }
@@ -724,7 +753,25 @@ var CB = (function CB() {
         }
     };
 
-    var setUp = function setUp() {
+    var lang = function lang() {
+        if (language === 'english') {
+            language = 'french';
+            setTable(CB2.menu2_fr);
+            nextMenu();
+        } else {
+            language = 'english';
+            setTable(CB2.menu2);
+            nextMenu();
+        }
+
+        voiceschanged();
+
+        if (Debugging) debugMessage = language + ' ' + instruction + '<br>Debugging';
+        else debugMessage = language + ' ' + instruction;
+        document.getElementById('debug').innerHTML = debugMessage;
+    };
+
+    var setUp = function setUp() { // not used anymore
         if (inSetup) {
             endVideoSetUp();
             inSetup = false;
@@ -846,6 +893,9 @@ var CB = (function CB() {
         soundOnOff: soundOnOff,
         buttonClicked: buttonClicked,
         makeAudio: makeAudio,
+        selected: selected,
+        voiceschanged: voiceschanged,
+        lang: lang,
         tmpMP3: tmpMP3,
     };
 

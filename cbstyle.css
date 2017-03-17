@@ -77,6 +77,13 @@ input#setupButton {color:royalblue; font: bold 100%'trebuchet ms',helvetica,sans
     background-color:ghostwhite;
     width: 95px; height:30px;
 }
+input#langButton {color:royalblue; font: bold 100%'trebuchet ms',helvetica,sans-serif;
+    float:right;
+    margin: 0.5%;
+    border-color: ghostwhite;
+    background-color:ghostwhite;
+    width: 95px; height:30px;
+}
 input#pauseButton {color:red; font: bold 100%'trebuchet ms',helvetica,sans-serif;
     float:right;
     margin: 0.5%;

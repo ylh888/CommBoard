@@ -14,7 +14,7 @@ var CB2 = ( function CB2() {
 
   var menu1 = [
 //row 0
-  { t: 'A', kind: 'Alpha', t_announce: 'row eh' },
+  { t: 'A', kind: 'RowHeading', t_announce: 'row eh' },
   { t: 'a', kind: 'Alpha' },
   { t: 'b', kind: 'Alpha' },
   { t: 'c', kind: 'Alpha' },
@@ -25,7 +25,7 @@ var CB2 = ( function CB2() {
 
 
 // row 1
-  { t: 'E', kind: 'Alpha', t_announce: 'row e' },
+  { t: 'E', kind: 'RowHeading', t_announce: 'row e' },
   { t: 'e', kind: 'Alpha' },
   { t: 'f', kind: 'Alpha' },
   { t: 'g', kind: 'Alpha' },
@@ -35,7 +35,7 @@ var CB2 = ( function CB2() {
   { t: '', kind: 'Skip' },
 
 // row 2
-  { t: 'I', kind: 'Alpha', t_announce: 'row i' },
+  { t: 'I', kind: 'RowHeading', t_announce: 'row i' },
   { t: 'i', kind: 'Alpha' },
   { t: 'j', kind: 'Alpha' }, 
   { t: 'k', kind: 'Alpha' },
@@ -45,7 +45,7 @@ var CB2 = ( function CB2() {
   { t: '', kind: 'Skip' },
 
 // row 3
-  { t: 'O', kind: 'Alpha', t_announce: 'row o' },
+  { t: 'O', kind: 'RowHeading', t_announce: 'row o' },
   { t: 'o', kind: 'Alpha' },
   { t: 'p', kind: 'Alpha' },
   { t: 'qu', kind: 'Alpha' },
@@ -55,7 +55,7 @@ var CB2 = ( function CB2() {
   { t: '', kind: 'Skip' },
 
 // row 4
-  { t: 'U', kind: 'Alpha', t_announce: 'row u' },
+  { t: 'U', kind: 'RowHeading', t_announce: 'row u' },
   { t: 'u', kind: 'Alpha' }, 
     { t: 'v', kind: 'Alpha' },
     { t: 'w', kind: 'Alpha' },
@@ -65,7 +65,7 @@ var CB2 = ( function CB2() {
   { t: '', kind: 'Skip' },
 
  // row 5   
-  { t: 'Needs', kind: 'Alpha', t_announce: 'needs' },
+  { t: 'Needs', kind: 'RowHeading', t_announce: 'needs' },
   { t: 'Next', kind: 'NextMenu', t_announce: 'next menu'},
   { t: 'Speak', kind: 'SayLine' },
   { t: 'Erase', kind: 'Erase' },
@@ -84,12 +84,13 @@ var CB2 = ( function CB2() {
 //  { t: '', kind: 'Skip' },
   ];
 		
+    menu1.name = "english1";
 	menu1.nRows = 6;
 	menu1.nCols = 8;
   
   var menu2 = [
 //row 0
-	{ t: 'Feelings', kind: 'Alpha' },
+	{ t: 'Feelings', kind: 'RowHeading' },
 	{ t: 'Hungry', kind: 'SayAlt', t_alt: 'I am hungry' }, 
 	{ t: 'Cold', kind: 'SayAlt', t_alt: 'I am cold' },
 	{ t: 'Hot', kind: 'SayAlt', t_alt: 'I am hot' },
@@ -108,6 +109,7 @@ var CB2 = ( function CB2() {
   { t: '', kind: 'Skip' },
   ];
 		
+    menu2.name = "english2";
 	menu2.nRows = 2;
 	menu2.nCols = 8;
   
@@ -118,7 +120,7 @@ var CB2 = ( function CB2() {
 	
   var menu1_fr = [
 //row 0
-	{ t: '1', kind: 'Alpha', t_announce: 'premiere' },
+	{ t: '1', kind: 'RowHeading', t_announce: 'premiere' },
 	{ t: 'a', kind: 'Alpha' },
   { t: 'b', kind: 'Alpha' },
   { t: 'c', kind: 'Alpha' },
@@ -128,7 +130,7 @@ var CB2 = ( function CB2() {
   { t: 'g', kind: 'Alpha' },
 
 // row 1
-	{ t: '2', kind: 'Alpha', t_announce: 'deuxieme' },
+	{ t: '2', kind: 'RowHeading', t_announce: 'deuxieme' },
   { t: 'h', kind: 'Alpha' },
   { t: 'i', kind: 'Alpha' },
   { t: 'j', kind: 'Alpha' }, 
@@ -138,7 +140,7 @@ var CB2 = ( function CB2() {
   { t: 'n', kind: 'Alpha' },
 
 // row 2
-	{ t: '3', kind: 'Alpha', t_announce: 'troisieme' },
+	{ t: '3', kind: 'RowHeading', t_announce: 'troisieme' },
   { t: 'o', kind: 'Alpha' },
   { t: 'p', kind: 'Alpha' },
   { t: 'qu', kind: 'Alpha' },
@@ -148,7 +150,7 @@ var CB2 = ( function CB2() {
 	{ t: 'espace', kind: 'Subs', substitute: ' ' },
 
 // row 3
-	{ t: '4', kind: 'Alpha', t_announce: 'quatrieme' },
+	{ t: '4', kind: 'RowHeading', t_announce: 'quatrieme' },
 	{ t: 'u', kind: 'Alpha' }, 
 	{ t: 'v', kind: 'Alpha' },
 	{ t: 'w', kind: 'Alpha' },
@@ -158,7 +160,7 @@ var CB2 = ( function CB2() {
 	{ t: 'effacer', kind: 'Delete' },
 
 // row 4
-	{ t: 'besoins', kind: 'Alpha' },
+	{ t: 'besoins', kind: 'RowHeading' },
   { t: 'Parler', kind: 'SayLine' },
   { t: 'Rayer', kind: 'Erase' },
 	{ t: 'succion', kind: 'SayAlt', t_alt: 'I need suction' },
@@ -178,12 +180,13 @@ var CB2 = ( function CB2() {
   { t: '', kind: 'Skip' },
   ];
 		
+    menu1_fr.name = "french1";
 	menu1_fr.nRows = 6;
 	menu1_fr.nCols = 8;
   
   var menu2_fr = [
 //row 0
-	{ t: 'sentir', kind: 'Alpha' },
+	{ t: 'sentir', kind: 'RowHeading' },
 	{ t: 'avide', kind: 'SayAlt', t_alt: 'I am hungry' }, 
 	{ t: 'froid', kind: 'SayAlt', t_alt: 'I am cold' },
 	{ t: 'chaud', kind: 'SayAlt', t_alt: 'I am hot' },
@@ -203,6 +206,7 @@ var CB2 = ( function CB2() {
   
   ];
   
+    menu2_fr.name = "french2";
   	menu2_fr.nRows = 2;
 	menu2_fr.nCols = 8;
  
