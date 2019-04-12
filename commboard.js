@@ -2,7 +2,7 @@
  * Created by ylh on 14-03-13.
  */
 var CB = (function CB() {
-    var version = "1.1",
+    var version = "1.2",
         language = "english"; // "french";
 
     var instruction = "[" + version + "] (space)=click | s=select | p=pause on/off | v=voice over simulation on/off | d=debug on/off",
@@ -123,9 +123,13 @@ var CB = (function CB() {
 
     window.speechSynthesis.onvoiceschanged = function () {
         voice_alt = getVoice("en", "en-UK");
-        if (language == "french") {
+        if (language == "français") {
             voice = getVoice("fr", "fr-CA");
             makeAudio('bienvenu');
+        } else
+        if (language == "español") {
+            voice = getVoice("es", "es-ES");
+            makeAudio('bienvenido');
         } else {
             voice = getVoice("en", "en-UK");
             makeAudio("Welcome to Comm Board!   This is version" + version);
@@ -138,6 +142,11 @@ var CB = (function CB() {
         if (language == "french") {
             voice = getVoice("fr", "fr-CA");
             makeAudio('bienvenu');
+        } else
+        if (language == "spanish") {
+            voice = getVoice("es", "es-ES");
+            voice_alt = getVoice("es", "es-ES");
+            makeAudio('bienvenido');
         } else {
             voice = getVoice("en", "en-UK");
             makeAudio("Welcome!");
@@ -239,6 +248,7 @@ var CB = (function CB() {
         switch (keychar) {
         case 's':
         case 'S':
+		case ' ':
             addDebug(' "s"');
             selected();
             break;
@@ -318,7 +328,7 @@ var CB = (function CB() {
             //                buttonText[i].kind === "SayLine") {
             //                pauseOff();
             //            }
-            doButton(i);
+            // doButton(i);
             return;
         }
         selectPressed = true;
@@ -329,19 +339,27 @@ var CB = (function CB() {
     function nextMenu() {
         addDebug("next menu -");
         // hardcoded!!!!!
-        if (language === "english") {
-            if (buttonText.name === "english1") {
-                setTable(CB2.menu2);
-            } else {
-                setTable(CB2.menu1);
-            }
-        }
         if (language === "french") {
             addDebug("in french");
             if (buttonText.name === "french1") {
                 setTable(CB2.menu2_fr);
             } else {
                 setTable(CB2.menu1_fr);
+            }
+        } else
+        if (language === "spanish") {
+            addDebug("in spanish");
+            if (buttonText.name === "spanish1") {
+                setTable(CB2.menu2_sp);
+            } else {
+                setTable(CB2.menu1_sp);
+            }
+        }
+        else {
+            if (buttonText.name === "english1") {
+                setTable(CB2.menu2);
+            } else {
+                setTable(CB2.menu1);
             }
         }
 
@@ -757,6 +775,11 @@ var CB = (function CB() {
         if (language === 'english') {
             language = 'french';
             setTable(CB2.menu2_fr);
+            nextMenu();
+        } else
+        if (language === 'french') {
+            language = 'spanish';
+            setTable(CB2.menu2_sp);
             nextMenu();
         } else {
             language = 'english';
